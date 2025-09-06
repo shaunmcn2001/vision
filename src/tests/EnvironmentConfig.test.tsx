@@ -99,6 +99,19 @@ describe('EnvironmentConfig', () => {
   });
 
   it('allows manual configuration when environment variables not set', async () => {
+    // Mock environment without VITE_BACKEND_URL
+    Object.defineProperty(import.meta, 'env', {
+      value: {
+        MODE: 'test',
+        DEV: false,
+        PROD: true,
+        BASE_URL: '/',
+        // No VITE_BACKEND_URL set
+      },
+      writable: true,
+      configurable: true
+    });
+
     const { useKV } = await import('@github/spark/hooks');
     const mockSetBackendUrl = vi.fn();
     
