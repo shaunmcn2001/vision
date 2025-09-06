@@ -1,155 +1,153 @@
-# GitHub Pages Deployment with Environment Variables
+# Deployment Guide
 
-This guide explains how to deploy your NDVI Vision app to GitHub Pages using repository secrets for your backend URL and API key. The app includes built-in validation and testing to ensure proper configuration.
+## Environment Configuration
 
-## 🔐 Setting Up Repository Secrets
+This NDVI Vision application supports multiple ways to configure your backend URL and API key for secure deployment.
 
-### Step-by-Step Setup
+### Method 1: GitHub Secrets (Recommended for Production)
 
-1. **Go to your GitHub repository**
-2. **Click on Settings** (in the repository, not your profile)
-3. **Navigate to Secrets and variables > Actions**
-4. **Add the following secrets:**
+For GitHub Pages deployment, the best practice is to use repository secrets:
 
-   **Required:**
-   - **Name:** `VITE_BACKEND_URL`
-   - **Value:** Your backend API URL (e.g., `https://your-api.example.com`)
+#### Step 1: Set Repository Secrets
+1. Navigate to your GitHub repository
+2. Go to **Settings** → **Secrets and variables** → **Actions**
+3. Add the following repository secrets:
+   - `VITE_BACKEND_URL`: Your backend API URL (e.g., `https://your-backend.com`)
+   - `VITE_API_KEY`: Your API authentication key
 
-   **Optional:**
-   - **Name:** `VITE_API_KEY` 
-   - **Value:** Your API key (leave empty if not needed)
+#### Step 2: Deploy to GitHub Pages
+The GitHub Actions workflow (`.github/workflows/deploy.yml`) will automatically:
+- Inject the secrets as environment variables during build
+- Run environment configuration tests
+- Deploy to GitHub Pages with your configuration
 
-### Environment Variable Validation
+#### Step 3: Enable GitHub Pages
+1. In your repository settings, go to **Pages**
+2. Set source to **GitHub Actions**
+3. Your app will be deployed at `https://yourusername.github.io/your-repo-name`
 
-The application includes comprehensive environment variable validation:
+### Method 2: Manual Configuration
 
-- **Automatic Testing**: GitHub Actions runs environment validation on every push
-- **Runtime Validation**: The Settings panel shows configuration status
-- **Security Checks**: Automated scanning for hardcoded secrets
-- **Deployment Readiness**: Validates configuration before deployment
+For development or testing, you can configure settings manually through the app:
 
-## 🚀 GitHub Actions Workflow
+1. Open the application
+2. Click **Settings** in the sidebar
+3. Click **Environment** to open the configuration dialog
+4. Enter your Backend URL and API Key
+5. Run connection tests to verify configuration
 
-The repository includes two automated workflows:
+### Method 3: Local Environment File
 
-### Deployment Workflow (`.github/workflows/deploy.yml`)
-- Triggers on pushes to `main` branch
-- Injects repository secrets as environment variables
-- Builds and deploys to GitHub Pages
-- Validates deployment readiness
+For local development, create a `.env` file in the project root:
 
-### Environment Testing (`.github/workflows/env-tests.yml`)
-- Runs on all pushes and pull requests
-- Validates environment variable configuration
-- Checks for security issues (hardcoded secrets)
-- Tests deployment scenarios
-
-## 🛠️ Local Development
-
-For local development, create a `.env.local` file:
-
-```bash
-# .env.local (don't commit this file)
-VITE_BACKEND_URL=https://your-backend-api.com
-VITE_API_KEY=your-api-key-here
+```env
+VITE_BACKEND_URL=http://localhost:8000
+VITE_API_KEY=your-development-key
 ```
 
-**Note:** Use `.env.local` instead of `.env` to prevent accidentally committing secrets.
+**Important**: Never commit the `.env` file to your repository.
 
-## 📋 How It Works
+## Environment Configuration Testing
 
-### Build Process
-1. GitHub Actions triggers on push to main
-2. Repository secrets are injected as environment variables
-3. Vite processes the environment variables during build
-4. Built app is deployed to GitHub Pages
+The application includes automated testing for environment configuration:
 
-### Runtime Behavior
-- `import.meta.env.VITE_*` variables are replaced with actual values
-- Environment validation runs automatically
-- Settings panel provides configuration status
-- Users can override values if needed
+### Running Tests Locally
+```bash
+npm test -- src/tests/EnvironmentConfig.test.tsx
+```
 
-## 🔒 Security Features
+### Test Coverage
+The tests verify:
+- Environment variable detection
+- Manual configuration fallbacks
+- Connection testing functionality
+- Authentication validation
+- Error handling
 
-### Built-in Security
-- ✅ **Repository Secrets**: Secure storage in GitHub
-- ✅ **Build-time Injection**: Variables are processed during build
-- ✅ **No Source Code Exposure**: Secrets never appear in repository
-- ✅ **Automated Scanning**: CI checks for hardcoded secrets
-- ✅ **Access Control**: Only authorized users can modify secrets
+### In CI/CD Pipeline
+The GitHub Actions workflow automatically runs these tests with your repository secrets to ensure:
+- Environment variables are properly injected
+- Backend connectivity works with your configuration
+- Authentication is correctly configured
 
-### Security Considerations
-- ⚠️ **Client-side Variables**: Frontend environment variables are visible in the built app
-- 🔒 **API Key Scope**: Use API keys with minimal required permissions
-- 🔄 **Regular Rotation**: Rotate API keys periodically
-- 🌐 **CORS Configuration**: Ensure backend allows your domain
+## Configuration Priority
 
-## 🌐 Enabling GitHub Pages
+The application uses the following priority order for configuration:
 
-1. Go to your repository **Settings**
-2. Scroll to **Pages** section
-3. Set **Source** to "GitHub Actions"
-4. Your app will be available at `https://yourusername.github.io/your-repo-name`
+1. **Environment Variables** (highest priority)
+   - `VITE_BACKEND_URL`
+   - `VITE_API_KEY`
 
-## ✅ Validating Your Setup
+2. **Persistent Local Storage**
+   - Manual overrides set through the Settings panel
+   - Stored using the `useKV` hook
 
-### Using the App
-1. Open the Settings panel (gear icon in sidebar)
-2. Expand "Environment Configuration Status"
-3. Check for green indicators on all configuration items
-4. Review any warnings or errors
+3. **Default Values** (lowest priority)
+   - Backend URL: `http://localhost:8000`
+   - API Key: (empty)
 
-### GitHub Actions Logs
-1. Go to the **Actions** tab in your repository
-2. Check the latest workflow runs
-3. Look for successful deployment and environment validation
-4. Review any failed steps or warnings
+## Security Best Practices
 
-### Testing API Connection
-1. Visit your deployed app
-2. Open browser developer tools > Network tab
-3. Verify API calls are going to your backend
-4. Check authentication headers contain your API key
+### For Production Deployment:
+- ✅ Use GitHub repository secrets
+- ✅ Enable HTTPS for your backend API
+- ✅ Use strong API keys
+- ✅ Regularly rotate API keys
+- ❌ Never hardcode credentials in source code
+- ❌ Never commit `.env` files
 
-## 🛠️ Troubleshooting
+### For Development:
+- ✅ Use local `.env` files
+- ✅ Use development-specific API keys
+- ✅ Test with both environment variables and manual configuration
+- ❌ Use production credentials in development
 
-### Common Issues
+## Troubleshooting
 
-**Build Fails**
-- Verify repository secrets are named exactly `VITE_BACKEND_URL` and `VITE_API_KEY`
-- Check GitHub Actions logs for specific error messages
-- Ensure your backend URL is accessible
+### Common Issues:
 
-**API Calls Fail**
-- Verify backend URL is publicly accessible
-- Check CORS configuration allows your GitHub Pages domain
-- Validate API key permissions and expiration
+#### "Environment variables are missing"
+- **Solution**: Set `VITE_BACKEND_URL` and `VITE_API_KEY` as repository secrets
+- **Local**: Create a `.env` file with the required variables
 
-**Environment Variables Not Working**
-- Confirm secrets are set in repository settings
-- Check that variables use `VITE_` prefix
-- Restart development server after changing `.env.local`
+#### "Authentication failed - check your API key"
+- **Solution**: Verify your API key is correct and has proper permissions
+- **Test**: Use the "Run Environment Tests" feature in the app
 
-### Getting Help
+#### "Connection failed"
+- **Solution**: Check that your backend URL is accessible
+- **Test**: Try accessing `{your-backend-url}/api/health` directly
 
-- Check the Settings panel for configuration status
-- Review GitHub Actions workflow logs
-- Use the app's built-in troubleshooting guide
-- Open an issue if problems persist
+#### GitHub Pages deployment fails
+- **Solution**: Ensure repository secrets are set correctly
+- **Check**: Review the GitHub Actions logs for specific error messages
 
-## 📖 Additional Resources
+### Debug Information
 
-- [GitHub Secrets Documentation](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions)
-- [Vite Environment Variables](https://vitejs.dev/guide/env-and-mode.html)
-- [GitHub Pages Documentation](https://docs.github.com/en/pages)
+The application provides comprehensive debug information:
 
-## 🚨 Emergency Recovery
+1. **Environment Config Dialog**: Shows current configuration and source
+2. **Connection Testing**: Validates backend connectivity and authentication
+3. **Backend Status Indicator**: Real-time health monitoring
+4. **Debug Panel**: Detailed application state (click the bug icon)
 
-If your deployment breaks:
+### Support
 
-1. Check GitHub Actions logs for errors
-2. Verify repository secrets are correctly set
-3. Test with a simple backend URL (like a health check endpoint)
-4. Temporarily disable API key requirement
-5. Roll back to a previous working commit
+If you continue to have issues:
+
+1. Check the browser console for error messages
+2. Use the Environment Configuration dialog to test your settings
+3. Verify your backend API is responding to health checks
+4. Ensure CORS is properly configured on your backend
+
+## Example Backend Requirements
+
+Your backend should support the following endpoints:
+
+- `GET /api/health` - Health check
+- `GET /api/fields` - List available fields
+- `GET /api/ndvi/monthly/by-field/{field_id}?year={year}` - Monthly NDVI data
+- `GET /api/tiles/ndvi/annual/{field_id}/{year}/{z}/{x}/{y}.png` - Annual tile data
+- `GET /api/tiles/ndvi/month/{field_id}/{year}/{month}/{z}/{x}/{y}.png` - Monthly tile data
+
+All endpoints should accept the `X-API-Key` header for authentication when configured.

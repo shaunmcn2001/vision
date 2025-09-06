@@ -12,8 +12,11 @@
         "preview": "vite preview",
         "test": "vitest",
         "test:env": "vitest src/tests/env.test.ts",
+        "test:env-config": "vitest src/tests/EnvironmentConfig.test.tsx",
         "test:ui": "vitest --ui",
-        "test:coverage": "vitest --coverage"
+        "test:coverage": "vitest --coverage",
+        "validate-env": "node scripts/validate-env.js",
+        "predeploy": "npm run validate-env && npm test"
     },
     "dependencies": {
         "@github/spark": "^0.39.0",

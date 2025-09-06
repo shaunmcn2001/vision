@@ -1,0 +1,232 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { EnvironmentConfig } from '../components/EnvironmentConfig';
+
+// Mock the hooks and API client
+vi.mock('@github/spark/hooks', () => ({
+  useKV: vi.fn(() => ['', vi.fn(), vi.fn()])
+}));
+
+vi.mock('../api', () => ({
+  apiClient: {
+    updateSettings: vi.fn(),
+    checkHealth: vi.fn(),
+    getFields: vi.fn()
+  }
+}));
+
+vi.mock('sonner', () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn()
+  }
+}));
+
+describe('EnvironmentConfig', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    
+    // Reset import.meta.env
+    Object.defineProperty(import.meta, 'env', {
+      value: {
+        VITE_BACKEND_URL: '',
+        VITE_API_KEY: '',
+        MODE: 'development'
+      },
+      writable: true
+    });
+  });
+
+  it('renders environment config button', () => {
+    render(<EnvironmentConfig />);
+    expect(screen.getByText('Environment')).toBeInTheDocument();
+  });
+
+  it('opens dialog when button is clicked', async () => {
+    render(<EnvironmentConfig />);
+    
+    const button = screen.getByText('Environment');
+    fireEvent.click(button);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Environment Configuration')).toBeInTheDocument();
+    });
+  });
+
+  it('shows current configuration status', async () => {
+    // Set environment variables
+    Object.defineProperty(import.meta, 'env', {
+      value: {
+        VITE_BACKEND_URL: 'https://api.example.com',
+        VITE_API_KEY: 'test-key-123',
+        MODE: 'production'
+      },
+      writable: true
+    });
+
+    render(<EnvironmentConfig />);
+    
+    const button = screen.getByText('Environment');
+    fireEvent.click(button);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Current Configuration')).toBeInTheDocument();
+      expect(screen.getByText('Environment')).toBeInTheDocument(); // Environment badge
+      expect(screen.getByText('https://api.example.com')).toBeInTheDocument();
+    });
+  });
+
+  it('shows manual configuration when no environment variables', async () => {
+    render(<EnvironmentConfig />);
+    
+    const button = screen.getByText('Environment');
+    fireEvent.click(button);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Manual Configuration')).toBeInTheDocument();
+      expect(screen.getByText('Some environment variables are missing')).toBeInTheDocument();
+    });
+  });
+
+  it('displays GitHub secrets setup guide', async () => {
+    render(<EnvironmentConfig />);
+    
+    const button = screen.getByText('Environment');
+    fireEvent.click(button);
+    
+    await waitFor(() => {
+      expect(screen.getByText('GitHub Secrets Setup (Recommended)')).toBeInTheDocument();
+      expect(screen.getByText('VITE_BACKEND_URL')).toBeInTheDocument();
+      expect(screen.getByText('VITE_API_KEY')).toBeInTheDocument();
+    });
+  });
+
+  it('allows manual configuration when environment variables not set', async () => {
+    const { useKV } = await import('@github/spark/hooks');
+    const mockSetBackendUrl = vi.fn();
+    const mockSetApiKey = vi.fn();
+    
+    (useKV as any)
+      .mockReturnValueOnce(['', mockSetBackendUrl, vi.fn()]) // backendUrl
+      .mockReturnValueOnce(['', mockSetApiKey, vi.fn()]); // apiKey
+
+    render(<EnvironmentConfig />);
+    
+    const button = screen.getByText('Environment');
+    fireEvent.click(button);
+    
+    await waitFor(() => {
+      const urlInput = screen.getByPlaceholderText('https://your-backend.com');
+      const keyInput = screen.getByPlaceholderText('your-api-key');
+      
+      expect(urlInput).not.toBeDisabled();
+      expect(keyInput).not.toBeDisabled();
+      
+      fireEvent.change(urlInput, { target: { value: 'https://test.com' } });
+      fireEvent.change(keyInput, { target: { value: 'test-key' } });
+      
+      expect(mockSetBackendUrl).toHaveBeenCalledWith('https://test.com');
+      expect(mockSetApiKey).toHaveBeenCalledWith('test-key');
+    });
+  });
+
+  it('disables manual inputs when environment variables are set', async () => {
+    Object.defineProperty(import.meta, 'env', {
+      value: {
+        VITE_BACKEND_URL: 'https://api.example.com',
+        VITE_API_KEY: 'test-key-123',
+        MODE: 'production'
+      },
+      writable: true
+    });
+
+    render(<EnvironmentConfig />);
+    
+    const button = screen.getByText('Environment');
+    fireEvent.click(button);
+    
+    await waitFor(() => {
+      const urlInput = screen.getByPlaceholderText('https://your-backend.com');
+      const keyInput = screen.getByPlaceholderText('your-api-key');
+      
+      expect(urlInput).toBeDisabled();
+      expect(keyInput).toBeDisabled();
+    });
+  });
+
+  it('runs environment tests successfully', async () => {
+    const { apiClient } = await import('../api');
+    
+    (apiClient.checkHealth as any).mockResolvedValue({
+      healthy: true,
+      message: 'Backend connected'
+    });
+    
+    (apiClient.getFields as any).mockResolvedValue([
+      { id: '1', name: 'Field 1' },
+      { id: '2', name: 'Field 2' }
+    ]);
+
+    render(<EnvironmentConfig />);
+    
+    const button = screen.getByText('Environment');
+    fireEvent.click(button);
+    
+    await waitFor(() => {
+      const testButton = screen.getByText('Run Environment Tests');
+      fireEvent.click(testButton);
+    });
+    
+    await waitFor(() => {
+      expect(screen.getByText('Found 2 fields')).toBeInTheDocument();
+    });
+  });
+
+  it('handles environment test failures', async () => {
+    const { apiClient } = await import('../api');
+    
+    (apiClient.checkHealth as any).mockResolvedValue({
+      healthy: false,
+      message: 'Connection refused'
+    });
+
+    render(<EnvironmentConfig />);
+    
+    const button = screen.getByText('Environment');
+    fireEvent.click(button);
+    
+    await waitFor(() => {
+      const testButton = screen.getByText('Run Environment Tests');
+      fireEvent.click(testButton);
+    });
+    
+    await waitFor(() => {
+      expect(screen.getByText('Connection failed: Connection refused')).toBeInTheDocument();
+    });
+  });
+
+  it('handles authentication failures', async () => {
+    const { apiClient } = await import('../api');
+    
+    (apiClient.checkHealth as any).mockResolvedValue({
+      healthy: true,
+      message: 'Backend connected'
+    });
+    
+    (apiClient.getFields as any).mockRejectedValue(new Error('Unauthorized'));
+
+    render(<EnvironmentConfig />);
+    
+    const button = screen.getByText('Environment');
+    fireEvent.click(button);
+    
+    await waitFor(() => {
+      const testButton = screen.getByText('Run Environment Tests');
+      fireEvent.click(testButton);
+    });
+    
+    await waitFor(() => {
+      expect(screen.getByText('Authentication failed - check your API key')).toBeInTheDocument();
+    });
+  });
+});

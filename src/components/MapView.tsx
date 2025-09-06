@@ -8,7 +8,7 @@ import {
   Plus, 
   Minus, 
   ArrowsOut, 
-  Layers, 
+  Stack, 
   Eye, 
   EyeSlash 
 } from '@phosphor-icons/react';
@@ -279,7 +279,7 @@ export function MapView({
                     onClick={toggleFieldBoundaries}
                     className="h-8 w-8 p-0"
                   >
-                    <Layers className="h-4 w-4" />
+                    <Stack className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="left">

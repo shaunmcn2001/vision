@@ -20,6 +20,7 @@ import { Gear, Check, X, Eye, EyeSlash, Info, GitBranch, ChevronDown } from '@ph
 import { apiClient } from '../api';
 import { useKV } from '@github/spark/hooks';
 import { EnhancedEnvStatus } from './EnhancedEnvStatus';
+import { EnvironmentConfig } from './EnvironmentConfig';
 
 interface SettingsProps {
   onSettingsUpdate?: () => void;
@@ -140,14 +141,22 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
         </SheetHeader>
 
         <div className="space-y-6 py-6">
+          {/* Environment Configuration Button */}
+          <div className="flex gap-2">
+            <EnvironmentConfig />
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="gap-2 flex-1"
+              onClick={() => setShowEnvStatus(!showEnvStatus)}
+            >
+              <Info className="h-4 w-4" />
+              Status
+            </Button>
+          </div>
+
           {/* Environment Configuration Status */}
           <Collapsible open={showEnvStatus} onOpenChange={setShowEnvStatus}>
-            <CollapsibleTrigger asChild>
-              <Button variant="outline" className="w-full justify-between">
-                Environment Configuration Status
-                <ChevronDown className={`h-4 w-4 transition-transform ${showEnvStatus ? 'rotate-180' : ''}`} />
-              </Button>
-            </CollapsibleTrigger>
             <CollapsibleContent className="mt-4">
               <EnhancedEnvStatus />
             </CollapsibleContent>
