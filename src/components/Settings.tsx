@@ -15,7 +15,7 @@ import {
   SheetFooter
 } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import { Gear, Check, X, Eye, EyeSlash } from '@phosphor-icons/react';
+import { Gear, Check, X, Eye, EyeSlash, Info, GitBranch } from '@phosphor-icons/react';
 import { apiClient } from '../api';
 import { useKV } from '@github/spark/hooks';
 
@@ -33,6 +33,11 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Check if environment variables are configured
+  const hasEnvBackendUrl = !!import.meta.env.VITE_BACKEND_URL;
+  const hasEnvApiKey = !!import.meta.env.VITE_API_KEY;
+  const isUsingEnvDefaults = backendUrl === import.meta.env.VITE_BACKEND_URL && apiKey === import.meta.env.VITE_API_KEY;
 
   useEffect(() => {
     const hasChanges = tempBackendUrl !== backendUrl || tempApiKey !== apiKey;
@@ -132,23 +137,63 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
         </SheetHeader>
 
         <div className="space-y-6 py-6">
+          {/* Environment Variables Status */}
+          {(hasEnvBackendUrl || hasEnvApiKey) && (
+            <Alert>
+              <GitBranch className="h-4 w-4" />
+              <AlertDescription>
+                <div className="space-y-1">
+                  <p className="font-medium">Environment variables detected:</p>
+                  <ul className="text-xs space-y-1 ml-4">
+                    {hasEnvBackendUrl && <li>• VITE_BACKEND_URL is configured</li>}
+                    {hasEnvApiKey && <li>• VITE_API_KEY is configured</li>}
+                  </ul>
+                  {isUsingEnvDefaults && (
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Currently using environment defaults. Override below if needed.
+                    </p>
+                  )}
+                </div>
+              </AlertDescription>
+            </Alert>
+          )}
+
           {/* Backend URL */}
           <div className="space-y-2">
-            <Label htmlFor="backend-url">Backend URL</Label>
+            <div className="flex items-center gap-2">
+              <Label htmlFor="backend-url">Backend URL</Label>
+              {hasEnvBackendUrl && (
+                <Badge variant="secondary" className="text-xs">
+                  ENV
+                </Badge>
+              )}
+            </div>
             <Input
               id="backend-url"
               placeholder="http://localhost:8000"
               value={tempBackendUrl}
               onChange={(e) => setTempBackendUrl(e.target.value)}
             />
-            <p className="text-xs text-muted-foreground">
-              Base URL for your NDVI backend API
-            </p>
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p>Base URL for your NDVI backend API</p>
+              {hasEnvBackendUrl && (
+                <p className="font-mono">
+                  Environment default: {import.meta.env.VITE_BACKEND_URL}
+                </p>
+              )}
+            </div>
           </div>
 
           {/* API Key */}
           <div className="space-y-2">
-            <Label htmlFor="api-key">API Key</Label>
+            <div className="flex items-center gap-2">
+              <Label htmlFor="api-key">API Key</Label>
+              {hasEnvApiKey && (
+                <Badge variant="secondary" className="text-xs">
+                  ENV
+                </Badge>
+              )}
+            </div>
             <div className="relative">
               <Input
                 id="api-key"
@@ -172,9 +217,14 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
                 )}
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Optional API key for authentication
-            </p>
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p>Optional API key for authentication</p>
+              {hasEnvApiKey && (
+                <p className="font-mono">
+                  Environment default: {import.meta.env.VITE_API_KEY ? '••••••••••••' : '(empty)'}
+                </p>
+              )}
+            </div>
           </div>
 
           <Separator />
@@ -211,22 +261,46 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
 
           {/* Current Settings Display */}
           <div className="space-y-3">
-            <span className="text-sm font-medium">Current Settings</span>
+            <span className="text-sm font-medium">Current Configuration</span>
             <div className="space-y-2 text-xs">
               <div>
-                <span className="text-muted-foreground">Backend URL:</span>
-                <p className="font-mono bg-muted rounded p-2 mt-1 break-all">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-muted-foreground">Backend URL:</span>
+                  {backendUrl === import.meta.env.VITE_BACKEND_URL && hasEnvBackendUrl && (
+                    <Badge variant="outline" className="text-xs">FROM ENV</Badge>
+                  )}
+                </div>
+                <p className="font-mono bg-muted rounded p-2 break-all">
                   {backendUrl || 'Not set'}
                 </p>
               </div>
               <div>
-                <span className="text-muted-foreground">API Key:</span>
-                <p className="font-mono bg-muted rounded p-2 mt-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-muted-foreground">API Key:</span>
+                  {apiKey === import.meta.env.VITE_API_KEY && hasEnvApiKey && (
+                    <Badge variant="outline" className="text-xs">FROM ENV</Badge>
+                  )}
+                </div>
+                <p className="font-mono bg-muted rounded p-2">
                   {apiKey ? '••••••••••••' : 'Not set'}
                 </p>
               </div>
             </div>
           </div>
+
+          {/* Deployment Info */}
+          {!hasEnvBackendUrl && !hasEnvApiKey && (
+            <Alert>
+              <Info className="h-4 w-4" />
+              <AlertDescription>
+                <p className="font-medium mb-1">For GitHub Pages deployment:</p>
+                <p className="text-xs">
+                  Set VITE_BACKEND_URL and VITE_API_KEY as repository secrets 
+                  instead of manually entering them here. See DEPLOYMENT.md for details.
+                </p>
+              </AlertDescription>
+            </Alert>
+          )}
 
           {/* Reset Option */}
           <div className="pt-4">
