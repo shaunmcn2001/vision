@@ -4,7 +4,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, XCircle, Warning, RefreshCw, ExternalLink } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, Warning, RefreshCw, ArrowSquareOut } from '@phosphor-icons/react';
 import { useEnvConfig } from '../hooks/useEnvConfig';
 
 /**
@@ -182,7 +182,7 @@ export function EnvStatus() {
                   onClick={() => window.open('https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions', '_blank')}
                   className="mt-2"
                 >
-                  <ExternalLink className="h-4 w-4 mr-2" />
+                  <ArrowSquareOut className="h-4 w-4 mr-2" />
                   GitHub Secrets Documentation
                 </Button>
               </div>

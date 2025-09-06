@@ -10,7 +10,7 @@ import {
   XCircle, 
   Warning, 
   RefreshCw, 
-  ExternalLink, 
+  ArrowSquareOut, 
   ChevronDown,
   Copy,
   Eye,
@@ -276,7 +276,7 @@ export function EnhancedEnvStatus() {
               size="sm"
               onClick={() => window.open('https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions', '_blank')}
             >
-              <ExternalLink className="h-4 w-4 mr-2" />
+              <ArrowSquareOut className="h-4 w-4 mr-2" />
               GitHub Secrets Guide
             </Button>
             <Button 
@@ -284,7 +284,7 @@ export function EnhancedEnvStatus() {
               size="sm"
               onClick={() => window.open('https://vitejs.dev/guide/env-and-mode.html', '_blank')}
             >
-              <ExternalLink className="h-4 w-4 mr-2" />
+              <ArrowSquareOut className="h-4 w-4 mr-2" />
               Vite Environment Variables
             </Button>
           </div>

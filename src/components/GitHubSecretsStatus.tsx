@@ -8,7 +8,7 @@ import {
   CheckCircle, 
   XCircle, 
   Warning,
-  ExternalLink,
+  ArrowSquareOut,
   GitBranch,
   Key,
   Globe
@@ -197,7 +197,7 @@ export function GitHubSecretsStatus() {
             variant="outline"
             className="w-full"
           >
-            <ExternalLink className="h-4 w-4 mr-2" />
+            <ArrowSquareOut className="h-4 w-4 mr-2" />
             {isGitHubPages ? "Open Repository Secrets" : "GitHub Secrets Guide"}
           </Button>
           
