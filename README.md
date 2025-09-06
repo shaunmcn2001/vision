@@ -2,7 +2,21 @@
 
 A modern web application for viewing and analyzing NDVI (Normalized Difference Vegetation Index) data with interactive maps, field management, and temporal analysis.
 
-## 🚀 Quick Start
+## 🚀 GitHub Pages Deployment Status
+
+This application is configured for automatic deployment to GitHub Pages. The deployment:
+- ✅ **Backend URL**: Automatically configured to `https://vision-backend-0l94.onrender.com`  
+- ✅ **API Authentication**: No API key required (backend updated)
+- ✅ **Build Configuration**: Optimized for GitHub Pages with proper base paths
+- ✅ **Environment Testing**: Automated validation of backend connectivity
+
+**To deploy your own copy:**
+1. Fork this repository
+2. Enable GitHub Pages in repository Settings → Pages → Source: "GitHub Actions"
+3. (Optional) Add `VITE_BACKEND_URL` as a repository secret if using a different backend
+4. Push to main branch - deployment will happen automatically!
+
+## 🎯 Quick Start
 
 ### Environment Variables
 
@@ -13,9 +27,9 @@ This application uses environment variables for configuration. You can set them 
    VITE_BACKEND_URL=https://vision-backend-0l94.onrender.com
    ```
 
-2. **For GitHub Pages deployment** - Set repository secrets:
+2. **For GitHub Pages deployment** - Set repository secrets (optional):
    - Go to your repository Settings → Secrets and variables → Actions
-   - Add `VITE_BACKEND_URL` as a secret
+   - Add `VITE_BACKEND_URL` as a secret (defaults to production backend if not set)
 
 3. **Manual override** - Use the Settings panel in the app (gear icon in sidebar)
 

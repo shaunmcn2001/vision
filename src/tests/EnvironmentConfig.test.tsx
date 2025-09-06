@@ -70,7 +70,7 @@ describe('EnvironmentConfig', () => {
     await waitFor(() => {
       expect(screen.getByText('Current Configuration')).toBeInTheDocument();
       expect(screen.getByText('Environment')).toBeInTheDocument(); // Environment badge
-      expect(screen.getByText('https://api.example.com')).toBeInTheDocument();
+      expect(screen.getByText('https://vision-backend-0l94.onrender.com')).toBeInTheDocument();
     });
   });
 

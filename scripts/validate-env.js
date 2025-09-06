@@ -45,7 +45,8 @@ function validateEnvironment() {
   log(`   MODE: ${context.mode || 'undefined'}\n`);
   
   // Check for required environment variables
-  const requiredEnvVars = ['VITE_BACKEND_URL', 'VITE_API_KEY'];
+  const requiredEnvVars = ['VITE_BACKEND_URL'];
+  const optionalEnvVars = ['VITE_API_KEY']; // API key no longer required
   
   log('🔧 Environment Variables Check:', 'blue');
   
@@ -60,6 +61,20 @@ function validateEnvironment() {
         log(`   ⚠️  ${varName}: Missing (Will use fallback)`, 'yellow');
         warnings++;
       }
+    } else {
+      const displayValue = varName.includes('KEY') || varName.includes('SECRET') 
+        ? `${value.substring(0, 4)}...${value.substring(value.length - 4)}`
+        : value;
+      log(`   ✅ ${varName}: ${displayValue}`, 'green');
+    }
+  });
+  
+  // Check optional environment variables
+  optionalEnvVars.forEach(varName => {
+    const value = process.env[varName];
+    
+    if (!value) {
+      log(`   ℹ️  ${varName}: Not set (Optional - API key no longer required)`, 'blue');
     } else {
       const displayValue = varName.includes('KEY') || varName.includes('SECRET') 
         ? `${value.substring(0, 4)}...${value.substring(value.length - 4)}`
@@ -118,14 +133,12 @@ function validateEnvironment() {
       const workflowContent = fs.readFileSync(workflowPath, 'utf8');
       
       // Check if workflow uses secrets
-      const usesSecrets = requiredEnvVars.every(varName => 
-        workflowContent.includes(`secrets.${varName}`)
-      );
+      const usesBackendUrl = workflowContent.includes('secrets.VITE_BACKEND_URL');
       
-      if (usesSecrets) {
-        log('   ✅ Workflow properly configured to use secrets', 'green');
+      if (usesBackendUrl) {
+        log('   ✅ Workflow properly configured to use backend URL secret', 'green');
       } else {
-        log('   ❌ Workflow missing secret references', 'red');
+        log('   ❌ Workflow missing VITE_BACKEND_URL secret reference', 'red');
         hasErrors = true;
       }
       
@@ -166,12 +179,15 @@ function validateEnvironment() {
   if (context.isGitHubActions) {
     log('   📦 GitHub Pages Deployment Mode', 'blue');
     
-    if (!process.env.VITE_BACKEND_URL || !process.env.VITE_API_KEY) {
-      log('   ❌ Missing required secrets for GitHub Pages deployment', 'red');
-      log('   💡 Add VITE_BACKEND_URL and VITE_API_KEY as repository secrets', 'yellow');
+    if (!process.env.VITE_BACKEND_URL) {
+      log('   ❌ Missing required VITE_BACKEND_URL secret for GitHub Pages deployment', 'red');
+      log('   💡 Add VITE_BACKEND_URL as repository secret', 'yellow');
       hasErrors = true;
     } else {
       log('   ✅ GitHub Pages deployment configuration is valid', 'green');
+      if (!process.env.VITE_API_KEY) {
+        log('   ℹ️  No API key configured (not required for this backend)', 'blue');
+      }
     }
   } else if (hasEnvFile) {
     log('   🛠️  Local Development Mode', 'blue');
