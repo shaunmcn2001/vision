@@ -7,8 +7,8 @@
  * for different deployment scenarios.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // ANSI color codes
 const colors = {
