@@ -8,7 +8,7 @@ The application has been updated to automatically connect to your new backend UR
 
 1. **Updated API Client** (`src/api/index.ts`)
    - Removed API key requirement from all API calls
-   - Updated default backend URL to: `https://srv-d2tejgeuk2gs73cqecp0.onrender.com`
+   - Updated default backend URL to: `https://vision-backend-0l94.onrender.com`
    - Simplified authentication by removing X-API-Key headers
    - Updated tile URL generation to exclude API key parameters
 
@@ -37,7 +37,7 @@ The application has been updated to automatically connect to your new backend UR
 
 ### New Backend URL
 
-The application now defaults to: `https://srv-d2tejgeuk2gs73cqecp0.onrender.com`
+The application now defaults to: `https://vision-backend-0l94.onrender.com`
 
 ### How to Use
 

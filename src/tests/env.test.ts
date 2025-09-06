@@ -9,8 +9,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 
 // Mock import.meta.env for testing
 const mockEnv = {
-  VITE_BACKEND_URL: 'https://api.example.com',
-  VITE_API_KEY: 'test-api-key-123',
+  VITE_BACKEND_URL: 'https://vision-backend-0l94.onrender.com',
   MODE: 'test',
   DEV: false,
   PROD: true,
@@ -29,8 +28,7 @@ Object.defineProperty(globalThis, 'import', {
 describe('Environment Variable Configuration', () => {
   beforeEach(() => {
     // Reset environment variables before each test
-    mockEnv.VITE_BACKEND_URL = 'https://api.example.com';
-    mockEnv.VITE_API_KEY = 'test-api-key-123';
+    mockEnv.VITE_BACKEND_URL = 'https://vision-backend-0l94.onrender.com';
   });
 
   describe('Required Environment Variables', () => {
@@ -39,21 +37,11 @@ describe('Environment Variable Configuration', () => {
       expect(import.meta.env.VITE_BACKEND_URL).not.toBe('');
     });
 
-    test('VITE_API_KEY should be defined', () => {
-      expect(import.meta.env.VITE_API_KEY).toBeDefined();
-      expect(import.meta.env.VITE_API_KEY).not.toBe('');
-    });
-
     test('should validate environment variables format', () => {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      const apiKey = import.meta.env.VITE_API_KEY;
 
       // Backend URL should be a valid URL
       expect(() => new URL(backendUrl)).not.toThrow();
-      
-      // API key should be a non-empty string
-      expect(typeof apiKey).toBe('string');
-      expect(apiKey.length).toBeGreaterThan(0);
     });
   });
 
@@ -64,14 +52,6 @@ describe('Environment Variable Configuration', () => {
       // Your app should have fallback handling
       const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com';
       expect(backendUrl).toBe('https://vision-backend-0l94.onrender.com');
-    });
-
-    test('should handle missing VITE_API_KEY gracefully', () => {
-      mockEnv.VITE_API_KEY = undefined as any;
-      
-      // Your app should handle missing API key
-      const apiKey = import.meta.env.VITE_API_KEY || '';
-      expect(typeof apiKey).toBe('string');
     });
 
     test('should validate backend URL format', () => {
@@ -129,30 +109,9 @@ describe('Environment Variable Configuration', () => {
     test('should not expose sensitive data in client bundle', () => {
       // Only VITE_ prefixed variables should be available
       expect(import.meta.env.VITE_BACKEND_URL).toBeDefined();
-      expect(import.meta.env.VITE_API_KEY).toBeDefined();
       
       // Non-VITE prefixed variables should not be available
       expect(import.meta.env.BACKEND_URL).toBeUndefined();
-      expect(import.meta.env.API_KEY).toBeUndefined();
-    });
-
-    test('should validate API key format', () => {
-      const testApiKeys = [
-        'sk-1234567890abcdef',
-        'api_key_123',
-        'Bearer token123',
-        '12345',
-        'very-long-api-key-with-special-chars-!@#$%',
-      ];
-
-      testApiKeys.forEach(key => {
-        mockEnv.VITE_API_KEY = key;
-        const apiKey = import.meta.env.VITE_API_KEY;
-        
-        expect(typeof apiKey).toBe('string');
-        expect(apiKey.length).toBeGreaterThan(0);
-        // Add any specific API key format validation here
-      });
     });
   });
 });
@@ -170,7 +129,6 @@ export class EnvValidator {
     this.errors = [];
 
     this.validateBackendUrl();
-    this.validateApiKey();
 
     return {
       isValid: this.errors.length === 0,
@@ -204,34 +162,9 @@ export class EnvValidator {
     }
   }
 
-  private static validateApiKey(): void {
-    const apiKey = import.meta.env.VITE_API_KEY;
-
-    if (!apiKey) {
-      this.errors.push('VITE_API_KEY is not defined');
-      return;
-    }
-
-    if (typeof apiKey !== 'string') {
-      this.errors.push('VITE_API_KEY must be a string');
-      return;
-    }
-
-    if (apiKey.length < 8) {
-      this.errors.push('VITE_API_KEY appears to be too short (minimum 8 characters)');
-    }
-
-    // Check for placeholder values
-    const placeholders = ['your-api-key', 'api-key-here', 'replace-me', 'test-key'];
-    if (placeholders.some(placeholder => apiKey.toLowerCase().includes(placeholder))) {
-      this.errors.push('VITE_API_KEY appears to be a placeholder value');
-    }
-  }
-
   static getConfig() {
     return {
       backendUrl: import.meta.env.VITE_BACKEND_URL,
-      apiKey: import.meta.env.VITE_API_KEY,
       isDev: import.meta.env.DEV,
       isProd: import.meta.env.PROD,
       mode: import.meta.env.MODE,

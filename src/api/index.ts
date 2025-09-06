@@ -4,7 +4,7 @@ class APIClient {
   private baseURL: string;
 
   constructor() {
-    this.baseURL = import.meta.env.VITE_BACKEND_URL || 'https://srv-d2tejgeuk2gs73cqecp0.onrender.com';
+    this.baseURL = import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com';
   }
 
   updateSettings(baseURL: string) {

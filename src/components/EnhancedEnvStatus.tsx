@@ -149,39 +149,6 @@ export function EnhancedEnvStatus() {
                     {config.backendUrl}
                   </p>
                 </div>
-                
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-muted-foreground">API Key:</span>
-                    <div className="flex items-center gap-1">
-                      {config.hasApiKey && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setShowApiKey(!showApiKey)}
-                          className="h-6 px-2"
-                        >
-                          {showApiKey ? <EyeSlash className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-                        </Button>
-                      )}
-                      {config.hasApiKey && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => copyToClipboard(import.meta.env.VITE_API_KEY || '', 'API Key')}
-                          className="h-6 px-2"
-                        >
-                          <Copy className="h-3 w-3" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                  <p className="font-mono text-xs bg-muted rounded p-2">
-                    {config.hasApiKey ? (
-                      showApiKey ? import.meta.env.VITE_API_KEY : config.apiKeyPreview
-                    ) : 'Not configured'}
-                  </p>
-                </div>
               </div>
             </CollapsibleContent>
           </Collapsible>

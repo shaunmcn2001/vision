@@ -29,7 +29,7 @@ interface SettingsProps {
 export function Settings({ onSettingsUpdate }: SettingsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showEnvStatus, setShowEnvStatus] = useState(false);
-  const [backendUrl, setBackendUrl] = useKV('backend-url', import.meta.env.VITE_BACKEND_URL || 'https://srv-d2tejgeuk2gs73cqecp0.onrender.com');
+  const [backendUrl, setBackendUrl] = useKV('backend-url', import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com');
   const [tempBackendUrl, setTempBackendUrl] = useState(backendUrl);
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -107,7 +107,7 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
   };
 
   const resetToDefaults = () => {
-    setTempBackendUrl(import.meta.env.VITE_BACKEND_URL || 'https://srv-d2tejgeuk2gs73cqecp0.onrender.com');
+    setTempBackendUrl(import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com');
   };
 
   return (
@@ -188,7 +188,7 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
             </div>
             <Input
               id="backend-url"
-              placeholder="https://srv-d2tejgeuk2gs73cqecp0.onrender.com"
+              placeholder="https://vision-backend-0l94.onrender.com"
               value={tempBackendUrl}
               onChange={(e) => setTempBackendUrl(e.target.value)}
             />

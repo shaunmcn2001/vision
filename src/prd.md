@@ -24,7 +24,7 @@ Added comprehensive automated testing for environment variable configuration to 
 ## Key Features
 
 ### ✅ Environment Validation
-- Validates `VITE_BACKEND_URL` and `VITE_API_KEY` format
+- Validates `VITE_BACKEND_URL` format
 - Provides fallback handling for missing variables
 - Generates warnings for development URLs in production
 - Runtime configuration status monitoring

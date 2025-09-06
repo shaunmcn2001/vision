@@ -2,7 +2,7 @@
 
 ## Environment Configuration
 
-This NDVI Vision application supports multiple ways to configure your backend URL and API key for secure deployment.
+This NDVI Vision application supports multiple ways to configure your backend URL for secure deployment.
 
 ### Method 1: GitHub Secrets (Recommended for Production)
 
@@ -11,13 +11,12 @@ For GitHub Pages deployment, the best practice is to use repository secrets:
 #### Step 1: Set Repository Secrets
 1. Navigate to your GitHub repository
 2. Go to **Settings** → **Secrets and variables** → **Actions**
-3. Add the following repository secrets:
-   - `VITE_BACKEND_URL`: Your backend API URL (e.g., `https://your-backend.com`)
-   - `VITE_API_KEY`: Your API authentication key
+3. Add the following repository secret:
+   - `VITE_BACKEND_URL`: Your backend API URL (e.g., `https://vision-backend-0l94.onrender.com`)
 
 #### Step 2: Deploy to GitHub Pages
 The GitHub Actions workflow (`.github/workflows/deploy.yml`) will automatically:
-- Inject the secrets as environment variables during build
+- Inject the secret as environment variables during build
 - Run environment configuration tests
 - Deploy to GitHub Pages with your configuration
 
@@ -33,7 +32,7 @@ For development or testing, you can configure settings manually through the app:
 1. Open the application
 2. Click **Settings** in the sidebar
 3. Click **Environment** to open the configuration dialog
-4. Enter your Backend URL and API Key
+4. Enter your Backend URL
 5. Run connection tests to verify configuration
 
 ### Method 3: Local Environment File
@@ -41,8 +40,7 @@ For development or testing, you can configure settings manually through the app:
 For local development, create a `.env` file in the project root:
 
 ```env
-VITE_BACKEND_URL=http://localhost:8000
-VITE_API_KEY=your-development-key
+VITE_BACKEND_URL=https://vision-backend-0l94.onrender.com
 ```
 
 **Important**: Never commit the `.env` file to your repository.
@@ -76,43 +74,37 @@ The application uses the following priority order for configuration:
 
 1. **Environment Variables** (highest priority)
    - `VITE_BACKEND_URL`
-   - `VITE_API_KEY`
 
 2. **Persistent Local Storage**
    - Manual overrides set through the Settings panel
    - Stored using the `useKV` hook
 
 3. **Default Values** (lowest priority)
-   - Backend URL: `http://localhost:8000`
-   - API Key: (empty)
+   - Backend URL: `https://vision-backend-0l94.onrender.com`
 
 ## Security Best Practices
 
 ### For Production Deployment:
 - ✅ Use GitHub repository secrets
 - ✅ Enable HTTPS for your backend API
-- ✅ Use strong API keys
-- ✅ Regularly rotate API keys
-- ❌ Never hardcode credentials in source code
+- ✅ Ensure your backend is accessible from your deployment domain
+- ✅ Configure proper CORS policies
+- ❌ Never hardcode URLs in source code
 - ❌ Never commit `.env` files
 
 ### For Development:
 - ✅ Use local `.env` files
-- ✅ Use development-specific API keys
 - ✅ Test with both environment variables and manual configuration
-- ❌ Use production credentials in development
+- ✅ Verify backend connectivity
+- ❌ Use production URLs in development without proper testing
 
 ## Troubleshooting
 
 ### Common Issues:
 
 #### "Environment variables are missing"
-- **Solution**: Set `VITE_BACKEND_URL` and `VITE_API_KEY` as repository secrets
-- **Local**: Create a `.env` file with the required variables
-
-#### "Authentication failed - check your API key"
-- **Solution**: Verify your API key is correct and has proper permissions
-- **Test**: Use the "Run Environment Tests" feature in the app
+- **Solution**: Set `VITE_BACKEND_URL` as a repository secret
+- **Local**: Create a `.env` file with the required variable
 
 #### "Connection failed"
 - **Solution**: Check that your backend URL is accessible
@@ -127,7 +119,7 @@ The application uses the following priority order for configuration:
 The application provides comprehensive debug information:
 
 1. **Environment Config Dialog**: Shows current configuration and source
-2. **Connection Testing**: Validates backend connectivity and authentication
+2. **Connection Testing**: Validates backend connectivity
 3. **Backend Status Indicator**: Real-time health monitoring
 4. **Debug Panel**: Detailed application state (click the bug icon)
 
@@ -150,4 +142,4 @@ Your backend should support the following endpoints:
 - `GET /api/tiles/ndvi/annual/{field_id}/{year}/{z}/{x}/{y}.png` - Annual tile data
 - `GET /api/tiles/ndvi/month/{field_id}/{year}/{month}/{z}/{x}/{y}.png` - Monthly tile data
 
-All endpoints should accept the `X-API-Key` header for authentication when configured.
+All endpoints are accessible without authentication requirements.

@@ -30,7 +30,6 @@ describe('EnvironmentConfig', () => {
     Object.defineProperty(import.meta, 'env', {
       value: {
         VITE_BACKEND_URL: '',
-        VITE_API_KEY: '',
         MODE: 'development'
       },
       writable: true
@@ -57,8 +56,7 @@ describe('EnvironmentConfig', () => {
     // Set environment variables
     Object.defineProperty(import.meta, 'env', {
       value: {
-        VITE_BACKEND_URL: 'https://api.example.com',
-        VITE_API_KEY: 'test-key-123',
+        VITE_BACKEND_URL: 'https://vision-backend-0l94.onrender.com',
         MODE: 'production'
       },
       writable: true
@@ -97,18 +95,15 @@ describe('EnvironmentConfig', () => {
     await waitFor(() => {
       expect(screen.getByText('GitHub Secrets Setup (Recommended)')).toBeInTheDocument();
       expect(screen.getByText('VITE_BACKEND_URL')).toBeInTheDocument();
-      expect(screen.getByText('VITE_API_KEY')).toBeInTheDocument();
     });
   });
 
   it('allows manual configuration when environment variables not set', async () => {
     const { useKV } = await import('@github/spark/hooks');
     const mockSetBackendUrl = vi.fn();
-    const mockSetApiKey = vi.fn();
     
     (useKV as any)
-      .mockReturnValueOnce(['', mockSetBackendUrl, vi.fn()]) // backendUrl
-      .mockReturnValueOnce(['', mockSetApiKey, vi.fn()]); // apiKey
+      .mockReturnValueOnce(['', mockSetBackendUrl, vi.fn()]); // backendUrl
 
     render(<EnvironmentConfig />);
     
@@ -116,25 +111,20 @@ describe('EnvironmentConfig', () => {
     fireEvent.click(button);
     
     await waitFor(() => {
-      const urlInput = screen.getByPlaceholderText('https://your-backend.com');
-      const keyInput = screen.getByPlaceholderText('your-api-key');
+      const urlInput = screen.getByPlaceholderText('https://vision-backend-0l94.onrender.com');
       
       expect(urlInput).not.toBeDisabled();
-      expect(keyInput).not.toBeDisabled();
       
       fireEvent.change(urlInput, { target: { value: 'https://test.com' } });
-      fireEvent.change(keyInput, { target: { value: 'test-key' } });
       
       expect(mockSetBackendUrl).toHaveBeenCalledWith('https://test.com');
-      expect(mockSetApiKey).toHaveBeenCalledWith('test-key');
     });
   });
 
   it('disables manual inputs when environment variables are set', async () => {
     Object.defineProperty(import.meta, 'env', {
       value: {
-        VITE_BACKEND_URL: 'https://api.example.com',
-        VITE_API_KEY: 'test-key-123',
+        VITE_BACKEND_URL: 'https://vision-backend-0l94.onrender.com',
         MODE: 'production'
       },
       writable: true
@@ -146,11 +136,9 @@ describe('EnvironmentConfig', () => {
     fireEvent.click(button);
     
     await waitFor(() => {
-      const urlInput = screen.getByPlaceholderText('https://your-backend.com');
-      const keyInput = screen.getByPlaceholderText('your-api-key');
+      const urlInput = screen.getByPlaceholderText('https://vision-backend-0l94.onrender.com');
       
       expect(urlInput).toBeDisabled();
-      expect(keyInput).toBeDisabled();
     });
   });
 
@@ -205,7 +193,7 @@ describe('EnvironmentConfig', () => {
     });
   });
 
-  it('handles authentication failures', async () => {
+  it('handles field data access failures', async () => {
     const { apiClient } = await import('../api');
     
     (apiClient.checkHealth as any).mockResolvedValue({
@@ -213,7 +201,7 @@ describe('EnvironmentConfig', () => {
       message: 'Backend connected'
     });
     
-    (apiClient.getFields as any).mockRejectedValue(new Error('Unauthorized'));
+    (apiClient.getFields as any).mockRejectedValue(new Error('Failed to fetch fields'));
 
     render(<EnvironmentConfig />);
     
@@ -226,7 +214,7 @@ describe('EnvironmentConfig', () => {
     });
     
     await waitFor(() => {
-      expect(screen.getByText('Authentication failed - check your API key')).toBeInTheDocument();
+      expect(screen.getByText('Failed to fetch fields data')).toBeInTheDocument();
     });
   });
 });

@@ -100,7 +100,7 @@ export class EnvSetupHelper {
     if (isDev) {
       return [
         '1. Create .env.local file in your project root',
-        '2. Add: VITE_BACKEND_URL=https://srv-d2tejgeuk2gs73cqecp0.onrender.com',
+        '2. Add: VITE_BACKEND_URL=https://vision-backend-0l94.onrender.com',
         '3. Restart your development server',
         '4. Check the Settings panel to verify configuration',
       ];

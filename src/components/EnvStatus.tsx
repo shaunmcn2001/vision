@@ -173,7 +173,6 @@ export function EnvStatus() {
                 </ol>
                 <div className="bg-muted p-3 rounded-lg font-mono text-xs space-y-1">
                   <div><strong>VITE_BACKEND_URL</strong>: Your API backend URL</div>
-                  <div><strong>VITE_API_KEY</strong>: Your API authentication key</div>
                 </div>
                 <p>These secrets will be automatically injected as environment variables during the GitHub Actions build process.</p>
                 <Button 

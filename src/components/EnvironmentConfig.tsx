@@ -39,7 +39,7 @@ export function EnvironmentConfig() {
   useEffect(() => {
     // Analyze current environment configuration
     const viteBackendUrl = import.meta.env.VITE_BACKEND_URL;
-    const currentUrl = viteBackendUrl || backendUrl || 'https://srv-d2tejgeuk2gs73cqecp0.onrender.com';
+    const currentUrl = viteBackendUrl || backendUrl || 'https://vision-backend-0l94.onrender.com';
     
     setEnvInfo({
       hasViteBackendUrl: !!viteBackendUrl,
@@ -224,7 +224,7 @@ export function EnvironmentConfig() {
                   <Label htmlFor="backend-url">Backend URL</Label>
                   <Input
                     id="backend-url"
-                    placeholder="https://srv-d2tejgeuk2gs73cqecp0.onrender.com"
+                    placeholder="https://vision-backend-0l94.onrender.com"
                     value={backendUrl}
                     onChange={(e) => setBackendUrl(e.target.value)}
                     disabled={envInfo?.hasViteBackendUrl}

@@ -26,26 +26,20 @@ export function GitHubSecretsStatus() {
   // Check if we're likely running in GitHub Actions/Pages
   const isGitHubPages = window.location.hostname.endsWith('.github.io');
   const hasEnvBackendUrl = !!import.meta.env.VITE_BACKEND_URL;
-  const hasEnvApiKey = !!import.meta.env.VITE_API_KEY;
+  const hasEnvApiKey = false;
   
   // Analyze environment configuration
   const getConfigurationStatus = () => {
-    if (hasEnvBackendUrl && hasEnvApiKey) {
+    if (hasEnvBackendUrl) {
       return {
         status: 'success' as const,
-        message: 'Repository secrets are properly configured',
-        details: 'Both VITE_BACKEND_URL and VITE_API_KEY are available'
-      };
-    } else if (hasEnvBackendUrl || hasEnvApiKey) {
-      return {
-        status: 'warning' as const,
-        message: 'Partial repository secrets configuration',
-        details: 'Some environment variables are missing'
+        message: 'Repository secret is properly configured',
+        details: 'VITE_BACKEND_URL is available'
       };
     } else {
       return {
         status: 'error' as const,
-        message: 'Repository secrets not configured',
+        message: 'Repository secret not configured',
         details: 'No environment variables detected from repository secrets'
       };
     }
@@ -135,16 +129,6 @@ export function GitHubSecretsStatus() {
                 {hasEnvBackendUrl ? "Configured" : "Missing"}
               </Badge>
             </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Key className="h-4 w-4" />
-                <span className="text-sm">VITE_API_KEY</span>
-              </div>
-              <Badge variant={hasEnvApiKey ? "default" : "secondary"}>
-                {hasEnvApiKey ? "Configured" : "Optional"}
-              </Badge>
-            </div>
           </div>
         </div>
 
@@ -182,7 +166,6 @@ export function GitHubSecretsStatus() {
                   <li>Click Settings → Secrets and variables → Actions</li>
                   <li>Click "New repository secret"</li>
                   <li>Add <code className="bg-muted px-1 rounded">VITE_BACKEND_URL</code> with your API URL</li>
-                  <li>Add <code className="bg-muted px-1 rounded">VITE_API_KEY</code> with your API key (optional)</li>
                   <li>Push to main branch to trigger deployment</li>
                 </ol>
               </div>

@@ -10,13 +10,12 @@ This application uses environment variables for configuration. You can set them 
 
 1. **For local development** - Create `.env.local`:
    ```bash
-   VITE_BACKEND_URL=https://your-backend-api.com
-   VITE_API_KEY=your-api-key-here
+   VITE_BACKEND_URL=https://vision-backend-0l94.onrender.com
    ```
 
 2. **For GitHub Pages deployment** - Set repository secrets:
    - Go to your repository Settings → Secrets and variables → Actions
-   - Add `VITE_BACKEND_URL` and `VITE_API_KEY` as secrets
+   - Add `VITE_BACKEND_URL` as a secret
 
 3. **Manual override** - Use the Settings panel in the app (gear icon in sidebar)
 
@@ -74,8 +73,7 @@ The application expects these endpoints from your backend:
 
 ### Environment Variables
 
-- `VITE_BACKEND_URL`: Your backend API base URL
-- `VITE_API_KEY`: Optional API key for authentication
+- `VITE_BACKEND_URL`: Your backend API base URL (defaults to https://vision-backend-0l94.onrender.com)
 
 ## 📄 License
 

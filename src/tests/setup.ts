@@ -23,8 +23,7 @@ Object.defineProperty(globalThis, 'import', {
   value: {
     meta: {
       env: {
-        VITE_BACKEND_URL: 'https://api.example.com',
-        VITE_API_KEY: 'test-api-key-123',
+        VITE_BACKEND_URL: 'https://vision-backend-0l94.onrender.com',
         MODE: 'test',
         DEV: false,
         PROD: true,
