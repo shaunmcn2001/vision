@@ -4,7 +4,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, XCircle, Warning, RefreshCw, ArrowSquareOut } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, Warning, ArrowClockwise, ArrowSquareOut } from '@phosphor-icons/react';
 import { useEnvConfig } from '../hooks/useEnvConfig';
 
 /**
@@ -66,7 +66,7 @@ export function EnvStatus() {
             onClick={refreshStatus}
             disabled={isRefreshing}
           >
-            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <ArrowClockwise className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </Button>
         </div>
       </CardHeader>

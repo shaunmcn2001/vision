@@ -9,7 +9,7 @@ import {
   CheckCircle, 
   XCircle, 
   Warning, 
-  RefreshCw, 
+  ArrowClockwise, 
   ArrowSquareOut, 
   ChevronDown,
   Copy,
@@ -72,7 +72,7 @@ export function EnhancedEnvStatus() {
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-6">
-          <RefreshCw className="h-6 w-6 animate-spin mr-2" />
+          <ArrowClockwise className="h-6 w-6 animate-spin mr-2" />
           <span>Loading environment status...</span>
         </CardContent>
       </Card>
@@ -96,7 +96,7 @@ export function EnhancedEnvStatus() {
               onClick={refresh}
               disabled={isLoading}
             >
-              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <ArrowClockwise className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </CardHeader>

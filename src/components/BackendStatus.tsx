@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { CheckCircle, XCircle, RefreshCw } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, ArrowClockwise } from '@phosphor-icons/react';
 import { apiClient } from '../api';
 import { BackendStatus } from '../types';
 
@@ -65,7 +65,7 @@ export function BackendStatus() {
                     onClick={checkStatus}
                     disabled={isChecking}
                   >
-                    <RefreshCw 
+                    <ArrowClockwise 
                       className={`h-3 w-3 ${isChecking ? 'animate-spin' : ''}`} 
                     />
                   </Button>
