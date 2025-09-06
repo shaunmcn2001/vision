@@ -7,7 +7,7 @@
 
 import { describe, test, expect, beforeEach } from 'vitest';
 
-// Mock import.meta.env for testing
+// Mock import.meta.env for testing  
 const mockEnv = {
   VITE_BACKEND_URL: 'https://vision-backend-0l94.onrender.com',
   MODE: 'test',
@@ -16,13 +16,10 @@ const mockEnv = {
 };
 
 // Replace import.meta.env with our mock
-Object.defineProperty(globalThis, 'import', {
-  value: {
-    meta: {
-      env: mockEnv
-    }
-  },
-  writable: true
+Object.defineProperty(import.meta, 'env', {
+  value: mockEnv,
+  writable: true,
+  configurable: true
 });
 
 describe('Environment Variable Configuration', () => {
