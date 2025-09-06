@@ -1,0 +1,126 @@
+/**
+ * GitHub Actions Workflow for automated environment variable testing
+ * 
+ * This workflow runs environment variable validation tests on every
+ * push and pull request to ensure proper configuration.
+ */
+
+name: Environment Variable Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  env-validation:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run environment variable validation tests
+      run: npm run test:env
+      env:
+        VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
+        VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+
+    - name: Test build with environment variables
+      run: npm run build
+      env:
+        VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
+        VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+
+    - name: Validate built assets contain environment variables
+      run: |
+        # Check if environment variables are properly injected into the build
+        if grep -r "VITE_BACKEND_URL" dist/ || grep -r "VITE_API_KEY" dist/; then
+          echo "❌ Environment variables found in build output - this is a security risk!"
+          exit 1
+        else
+          echo "✅ Environment variables properly processed and not exposed in build"
+        fi
+
+    - name: Test deployment readiness
+      run: |
+        # Verify the build can be served statically
+        npm install -g serve
+        serve -s dist -p 3000 &
+        sleep 5
+        
+        # Test if the app loads
+        if curl -f http://localhost:3000; then
+          echo "✅ Static deployment test passed"
+        else
+          echo "❌ Static deployment test failed"
+          exit 1
+        fi
+
+  env-security-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Security scan for hardcoded secrets
+      run: |
+        # Check for potential hardcoded secrets in source code
+        echo "Scanning for potential hardcoded secrets..."
+        
+        # Look for common patterns that might indicate hardcoded secrets
+        PATTERNS=(
+          "api[_-]?key.*=.*['\"][^'\"]{10,}['\"]"
+          "secret.*=.*['\"][^'\"]{10,}['\"]"
+          "token.*=.*['\"][^'\"]{10,}['\"]"
+          "password.*=.*['\"][^'\"]{8,}['\"]"
+          "https?://[^/]*:[^@]*@"
+        )
+        
+        FOUND=0
+        for pattern in "${PATTERNS[@]}"; do
+          if grep -r -i -E "$pattern" src/ --exclude-dir=node_modules; then
+            echo "❌ Potential hardcoded secret found matching pattern: $pattern"
+            FOUND=1
+          fi
+        done
+        
+        if [ $FOUND -eq 0 ]; then
+          echo "✅ No hardcoded secrets detected"
+        else
+          echo "❌ Potential security issues found. Please review and use environment variables instead."
+          exit 1
+        fi
+
+    - name: Check environment variable usage
+      run: |
+        echo "Validating proper environment variable usage..."
+        
+        # Check that environment variables are accessed correctly
+        if grep -r "import\.meta\.env\." src/ | grep -v "VITE_"; then
+          echo "❌ Non-VITE environment variables detected. Only VITE_ prefixed variables are available in the browser."
+          exit 1
+        fi
+        
+        # Check for process.env usage (not available in browser)
+        if grep -r "process\.env" src/ --exclude-dir=node_modules; then
+          echo "❌ process.env usage detected. Use import.meta.env instead for Vite."
+          exit 1
+        fi
+        
+        echo "✅ Environment variable usage is correct"

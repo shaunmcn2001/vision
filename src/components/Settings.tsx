@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
   Sheet, 
   SheetContent, 
@@ -15,9 +16,10 @@ import {
   SheetFooter
 } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import { Gear, Check, X, Eye, EyeSlash, Info, GitBranch } from '@phosphor-icons/react';
+import { Gear, Check, X, Eye, EyeSlash, Info, GitBranch, ChevronDown } from '@phosphor-icons/react';
 import { apiClient } from '../api';
 import { useKV } from '@github/spark/hooks';
+import { EnvStatus } from './EnvStatus';
 
 interface SettingsProps {
   onSettingsUpdate?: () => void;
@@ -25,6 +27,7 @@ interface SettingsProps {
 
 export function Settings({ onSettingsUpdate }: SettingsProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showEnvStatus, setShowEnvStatus] = useState(false);
   const [backendUrl, setBackendUrl] = useKV('backend-url', import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000');
   const [apiKey, setApiKey] = useKV('api-key', import.meta.env.VITE_API_KEY || '');
   const [tempBackendUrl, setTempBackendUrl] = useState(backendUrl);
@@ -137,6 +140,21 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
         </SheetHeader>
 
         <div className="space-y-6 py-6">
+          {/* Environment Configuration Status */}
+          <Collapsible open={showEnvStatus} onOpenChange={setShowEnvStatus}>
+            <CollapsibleTrigger asChild>
+              <Button variant="outline" className="w-full justify-between">
+                Environment Configuration Status
+                <ChevronDown className={`h-4 w-4 transition-transform ${showEnvStatus ? 'rotate-180' : ''}`} />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-4">
+              <EnvStatus />
+            </CollapsibleContent>
+          </Collapsible>
+
+          <Separator />
+
           {/* Environment Variables Status */}
           {(hasEnvBackendUrl || hasEnvApiKey) && (
             <Alert>
