@@ -5,7 +5,7 @@ class APIClient {
   private apiKey: string;
 
   constructor() {
-    this.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+    this.baseURL = import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com';
     this.apiKey = import.meta.env.VITE_API_KEY || '';
   }
 

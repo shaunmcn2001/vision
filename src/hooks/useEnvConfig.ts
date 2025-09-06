@@ -27,7 +27,7 @@ export function useEnvConfig() {
     // Provide fallbacks for missing values
     return {
       ...config,
-      backendUrl: config.backendUrl || 'http://localhost:8000',
+      backendUrl: config.backendUrl || 'https://vision-backend-0l94.onrender.com',
       apiKey: config.apiKey || '',
     };
   };
@@ -42,7 +42,7 @@ export function useEnvConfig() {
     const validation = validateEnvironment();
 
     return {
-      hasBackendUrl: !!config.backendUrl && config.backendUrl !== 'http://localhost:8000',
+      hasBackendUrl: !!config.backendUrl && config.backendUrl !== 'https://vision-backend-0l94.onrender.com',
       hasApiKey: !!config.apiKey,
       isValid: validation.isValid,
       errors: validation.errors,

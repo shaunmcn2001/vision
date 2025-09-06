@@ -62,8 +62,8 @@ describe('Environment Variable Configuration', () => {
       mockEnv.VITE_BACKEND_URL = undefined as any;
       
       // Your app should have fallback handling
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
-      expect(backendUrl).toBe('http://localhost:8000');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com';
+      expect(backendUrl).toBe('https://vision-backend-0l94.onrender.com');
     });
 
     test('should handle missing VITE_API_KEY gracefully', () => {
@@ -77,7 +77,7 @@ describe('Environment Variable Configuration', () => {
     test('should validate backend URL format', () => {
       const testCases = [
         { url: 'https://api.example.com', valid: true },
-        { url: 'http://localhost:8000', valid: true },
+        { url: 'https://vision-backend-0l94.onrender.com', valid: true },
         { url: 'https://api.example.com:8080', valid: true },
         { url: 'invalid-url', valid: false },
         { url: 'ftp://example.com', valid: true }, // Valid URL, but might not be suitable

@@ -45,7 +45,7 @@ export function EnvironmentConfig() {
     // Analyze current environment configuration
     const viteBackendUrl = import.meta.env.VITE_BACKEND_URL;
     const viteApiKey = import.meta.env.VITE_API_KEY;
-    const currentUrl = viteBackendUrl || backendUrl || 'http://localhost:8000';
+    const currentUrl = viteBackendUrl || backendUrl || 'https://vision-backend-0l94.onrender.com';
     const currentKey = viteApiKey || apiKey || '';
     
     setEnvInfo({

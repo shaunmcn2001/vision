@@ -29,7 +29,7 @@ interface SettingsProps {
 export function Settings({ onSettingsUpdate }: SettingsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showEnvStatus, setShowEnvStatus] = useState(false);
-  const [backendUrl, setBackendUrl] = useKV('backend-url', import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000');
+  const [backendUrl, setBackendUrl] = useKV('backend-url', import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com');
   const [apiKey, setApiKey] = useKV('api-key', import.meta.env.VITE_API_KEY || '');
   const [tempBackendUrl, setTempBackendUrl] = useState(backendUrl);
   const [tempApiKey, setTempApiKey] = useState(apiKey);
@@ -114,7 +114,7 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
   };
 
   const resetToDefaults = () => {
-    setTempBackendUrl(import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000');
+    setTempBackendUrl(import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com');
     setTempApiKey(import.meta.env.VITE_API_KEY || '');
   };
 
@@ -197,7 +197,7 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
             </div>
             <Input
               id="backend-url"
-              placeholder="http://localhost:8000"
+              placeholder="https://vision-backend-0l94.onrender.com"
               value={tempBackendUrl}
               onChange={(e) => setTempBackendUrl(e.target.value)}
             />
