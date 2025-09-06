@@ -46,17 +46,31 @@ export function ChartPanel({ selectedField, selectedYear, selectedMonth }: Chart
       setLoading(true);
       setError(null);
       
+      console.log(`Fetching NDVI data for field ${selectedField.id}, year ${selectedYear}`);
       const response = await apiClient.getMonthlyNDVI(selectedField.id, selectedYear);
       
-      const formattedData: ChartData[] = response.data.map(item => ({
-        month: new Date(2000, item.month - 1).toLocaleDateString('en', { month: 'short' }),
-        ndvi: Number(item.ndvi_value.toFixed(3)),
-        date: item.date,
-      }));
+      if (!response || !response.data || !Array.isArray(response.data)) {
+        throw new Error('Invalid response format: expected data array');
+      }
+      
+      const formattedData: ChartData[] = response.data.map(item => {
+        if (typeof item.ndvi_value !== 'number') {
+          console.warn('Invalid NDVI value:', item.ndvi_value);
+        }
+        
+        return {
+          month: new Date(2000, item.month - 1).toLocaleDateString('en', { month: 'short' }),
+          ndvi: Number(item.ndvi_value.toFixed(3)),
+          date: item.date,
+        };
+      });
 
+      console.log(`Loaded ${formattedData.length} NDVI data points`);
       setChartData(formattedData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load NDVI data');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load NDVI data';
+      console.error('NDVI data loading error:', err);
+      setError(errorMessage);
       setChartData([]);
     } finally {
       setLoading(false);

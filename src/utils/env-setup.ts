@@ -5,6 +5,8 @@
  * variable configuration in different deployment scenarios.
  */
 
+import { useState } from 'react';
+
 export interface EnvCheckResult {
   isValid: boolean;
   errors: string[];
@@ -226,6 +228,3 @@ export function useEnvValidation() {
     isDeploymentReady: validation?.isValid ?? false,
   };
 }
-
-// Import React hooks
-import { useState } from 'react';

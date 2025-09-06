@@ -30,10 +30,20 @@ export function FieldList({ selectedFieldId, onFieldSelect }: FieldListProps) {
     try {
       setLoading(true);
       setError(null);
+      
+      console.log('Fetching fields from API...');
       const result = await apiClient.getFields();
+      
+      if (!Array.isArray(result)) {
+        throw new Error('Invalid response format: expected array of fields');
+      }
+      
+      console.log(`Loaded ${result.length} fields successfully`);
       setFields(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load fields');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load fields';
+      console.error('Field loading error:', err);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

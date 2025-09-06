@@ -29,7 +29,9 @@ interface SettingsProps {
 export function Settings({ onSettingsUpdate }: SettingsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showEnvStatus, setShowEnvStatus] = useState(false);
-  const [backendUrl, setBackendUrl] = useKV('backend-url', import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com');
+  const [backendUrl, setBackendUrl] = useKV('backend-url', 
+    import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com'
+  );
   const [tempBackendUrl, setTempBackendUrl] = useState(backendUrl);
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -54,18 +56,45 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
   };
 
   const handleSave = async () => {
-    setBackendUrl(tempBackendUrl);
-    
-    // Update API client with new settings
-    apiClient.updateSettings(tempBackendUrl);
-    
-    setHasUnsavedChanges(false);
-    
-    if (onSettingsUpdate) {
-      onSettingsUpdate();
+    try {
+      // Validate URL format
+      let cleanUrl = tempBackendUrl.trim();
+      
+      // Remove trailing slash if present
+      if (cleanUrl.endsWith('/')) {
+        cleanUrl = cleanUrl.slice(0, -1);
+      }
+      
+      // Basic URL validation
+      try {
+        new URL(cleanUrl);
+      } catch {
+        setTestResult({
+          success: false,
+          message: 'Invalid URL format'
+        });
+        return;
+      }
+      
+      setBackendUrl(cleanUrl);
+      
+      // Update API client with new settings
+      apiClient.updateSettings(cleanUrl);
+      
+      setHasUnsavedChanges(false);
+      
+      if (onSettingsUpdate) {
+        onSettingsUpdate();
+      }
+      
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      setTestResult({
+        success: false,
+        message: 'Failed to save settings'
+      });
     }
-    
-    setIsOpen(false);
   };
 
   const handleCancel = () => {

@@ -18,12 +18,15 @@ export function BackendStatus() {
   const checkStatus = async () => {
     setIsChecking(true);
     try {
+      console.log('Checking backend health...');
       const result = await apiClient.checkHealth();
+      console.log('Backend status check result:', result);
       setStatus(result);
     } catch (error) {
+      console.error('Backend status check failed:', error);
       setStatus({
         healthy: false,
-        message: 'Network error',
+        message: error instanceof Error ? error.message : 'Network error',
         lastChecked: new Date(),
       });
     } finally {

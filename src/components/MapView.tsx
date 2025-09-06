@@ -165,32 +165,46 @@ export function MapView({
 
     // Remove existing NDVI layer
     if (map.current.getLayer('ndvi-tiles')) {
-      map.current.removeLayer('ndvi-tiles');
+      try {
+        map.current.removeLayer('ndvi-tiles');
+      } catch (error) {
+        console.warn('Failed to remove NDVI layer:', error);
+      }
     }
     if (map.current.getSource('ndvi')) {
-      map.current.removeSource('ndvi');
+      try {
+        map.current.removeSource('ndvi');
+      } catch (error) {
+        console.warn('Failed to remove NDVI source:', error);
+      }
     }
 
     if (showNDVILayer) {
-      const tileUrl = selectedMonth 
-        ? apiClient.getTileURL('monthly', selectedField.id, selectedYear, selectedMonth)
-        : apiClient.getTileURL('annual', selectedField.id, selectedYear);
+      try {
+        const tileUrl = selectedMonth 
+          ? apiClient.getTileURL('monthly', selectedField.id, selectedYear, selectedMonth)
+          : apiClient.getTileURL('annual', selectedField.id, selectedYear);
 
-      map.current.addSource('ndvi', {
-        type: 'raster',
-        tiles: [tileUrl],
-        tileSize: 256,
-        attribution: 'NDVI Data'
-      });
+        console.log('Loading NDVI tiles from:', tileUrl);
 
-      map.current.addLayer({
-        id: 'ndvi-tiles',
-        type: 'raster',
-        source: 'ndvi',
-        paint: {
-          'raster-opacity': 0.7
-        }
-      }, 'selected-field-boundary'); // Add below field boundary
+        map.current.addSource('ndvi', {
+          type: 'raster',
+          tiles: [tileUrl],
+          tileSize: 256,
+          attribution: 'NDVI Data'
+        });
+
+        map.current.addLayer({
+          id: 'ndvi-tiles',
+          type: 'raster',
+          source: 'ndvi',
+          paint: {
+            'raster-opacity': 0.7
+          }
+        }, 'selected-field-boundary'); // Add below field boundary
+      } catch (error) {
+        console.error('Failed to add NDVI layer:', error);
+      }
     }
   }, [selectedField, selectedYear, selectedMonth, showNDVILayer, mapLoaded]);
 

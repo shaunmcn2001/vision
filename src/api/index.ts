@@ -4,11 +4,22 @@ class APIClient {
   private baseURL: string;
 
   constructor() {
+    // Ensure we always have a valid backend URL
     this.baseURL = import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com';
+    
+    // Remove trailing slash if present
+    if (this.baseURL.endsWith('/')) {
+      this.baseURL = this.baseURL.slice(0, -1);
+    }
   }
 
   updateSettings(baseURL: string) {
     this.baseURL = baseURL;
+    
+    // Remove trailing slash if present
+    if (this.baseURL.endsWith('/')) {
+      this.baseURL = this.baseURL.slice(0, -1);
+    }
   }
 
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
