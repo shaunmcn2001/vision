@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Toaster } from '@/components/ui/sonner';
-import { ThemeProvider } from 'next-themes';
 import { MapView } from './components/MapView';
 import { FieldList } from './components/FieldList';
 import { YearMonthPicker } from './components/YearMonthPicker';
@@ -65,8 +64,7 @@ function App() {
   }, [selectedFieldId, selectedField]);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <div className="h-screen w-screen flex bg-background text-foreground overflow-hidden">
+    <div className="h-screen w-screen flex bg-background text-foreground overflow-hidden">
         {/* Sidebar */}
         <div 
           className={`
@@ -199,7 +197,6 @@ function App() {
         {/* Toast Notifications */}
         <Toaster />
       </div>
-    </ThemeProvider>
   );
 }
 
