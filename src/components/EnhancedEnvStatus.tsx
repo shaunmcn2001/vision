@@ -11,7 +11,7 @@ import {
   Warning, 
   ArrowClockwise, 
   ArrowSquareOut, 
-  ChevronDown,
+  CaretDown,
   Copy,
   Eye,
   EyeSlash,
@@ -121,7 +121,7 @@ export function EnhancedEnvStatus() {
             <CollapsibleTrigger asChild>
               <Button variant="outline" className="w-full justify-between">
                 Configuration Details
-                <ChevronDown className={`h-4 w-4 transition-transform ${showConfig ? 'rotate-180' : ''}`} />
+                <CaretDown className={`h-4 w-4 transition-transform ${showConfig ? 'rotate-180' : ''}`} />
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-4 space-y-3">
@@ -250,7 +250,7 @@ export function EnhancedEnvStatus() {
             <CollapsibleTrigger asChild>
               <Button variant="outline" className="w-full justify-between">
                 Troubleshooting Guide
-                <ChevronDown className={`h-4 w-4 transition-transform ${showTroubleshooting ? 'rotate-180' : ''}`} />
+                <CaretDown className={`h-4 w-4 transition-transform ${showTroubleshooting ? 'rotate-180' : ''}`} />
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-4">

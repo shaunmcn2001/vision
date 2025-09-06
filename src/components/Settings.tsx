@@ -16,7 +16,7 @@ import {
   SheetFooter
 } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import { Gear, Check, X, Eye, EyeSlash, Info, GitBranch, ChevronDown } from '@phosphor-icons/react';
+import { Gear, Check, X, Eye, EyeSlash, Info, GitBranch } from '@phosphor-icons/react';
 import { apiClient } from '../api';
 import { useKV } from '@github/spark/hooks';
 import { EnhancedEnvStatus } from './EnhancedEnvStatus';
