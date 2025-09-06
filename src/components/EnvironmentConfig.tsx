@@ -17,26 +17,21 @@ import {
   Warning, 
   Info,
   GitBranch,
-  Key,
   Globe
 } from '@phosphor-icons/react';
 
 interface EnvironmentInfo {
   hasViteBackendUrl: boolean;
-  hasViteApiKey: boolean;
   currentBackendUrl: string;
-  currentApiKey: string;
   isProduction: boolean;
 }
 
 export function EnvironmentConfig() {
   const [backendUrl, setBackendUrl] = useKV('manual-backend-url', '');
-  const [apiKey, setApiKey] = useKV('manual-api-key', '');
   const [isOpen, setIsOpen] = useState(false);
   const [envInfo, setEnvInfo] = useState<EnvironmentInfo | null>(null);
   const [testResults, setTestResults] = useState<{
     connection: 'pending' | 'success' | 'error';
-    authentication: 'pending' | 'success' | 'error';
     fields: 'pending' | 'success' | 'error';
     message?: string;
   } | null>(null);
@@ -44,22 +39,18 @@ export function EnvironmentConfig() {
   useEffect(() => {
     // Analyze current environment configuration
     const viteBackendUrl = import.meta.env.VITE_BACKEND_URL;
-    const viteApiKey = import.meta.env.VITE_API_KEY;
-    const currentUrl = viteBackendUrl || backendUrl || 'https://vision-backend-0l94.onrender.com';
-    const currentKey = viteApiKey || apiKey || '';
+    const currentUrl = viteBackendUrl || backendUrl || 'https://srv-d2tejgeuk2gs73cqecp0.onrender.com';
     
     setEnvInfo({
       hasViteBackendUrl: !!viteBackendUrl,
-      hasViteApiKey: !!viteApiKey,
       currentBackendUrl: currentUrl,
-      currentApiKey: currentKey,
       isProduction: import.meta.env.MODE === 'production'
     });
-  }, [backendUrl, apiKey]);
+  }, [backendUrl]);
 
   const handleSaveConfig = () => {
     if (backendUrl) {
-      apiClient.updateSettings(backendUrl, apiKey);
+      apiClient.updateSettings(backendUrl);
       toast.success('Configuration saved successfully');
       setIsOpen(false);
     } else {
@@ -72,7 +63,6 @@ export function EnvironmentConfig() {
 
     setTestResults({
       connection: 'pending',
-      authentication: 'pending',
       fields: 'pending'
     });
 
@@ -86,34 +76,30 @@ export function EnvironmentConfig() {
       if (!healthCheck.healthy) {
         setTestResults(prev => prev ? { 
           ...prev, 
-          authentication: 'error',
           fields: 'error',
           message: `Connection failed: ${healthCheck.message}`
         } : null);
         return;
       }
 
-      // Test 2: Authentication (try to fetch fields)
+      // Test 2: Try to fetch fields
       try {
         const fields = await apiClient.getFields();
         setTestResults(prev => prev ? { 
           ...prev, 
-          authentication: 'success',
           fields: fields.length > 0 ? 'success' : 'error',
           message: `Found ${fields.length} fields`
         } : null);
       } catch (error) {
         setTestResults(prev => prev ? { 
           ...prev, 
-          authentication: 'error',
           fields: 'error',
-          message: 'Authentication failed - check your API key'
+          message: 'Failed to fetch fields data'
         } : null);
       }
     } catch (error) {
       setTestResults({
         connection: 'error',
-        authentication: 'error',
         fields: 'error',
         message: error instanceof Error ? error.message : 'Connection failed'
       });
@@ -168,23 +154,6 @@ export function EnvironmentConfig() {
                     </code>
                   </div>
                 </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Key className="h-4 w-4" />
-                    <span className="text-sm">API Key</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {envInfo.hasViteApiKey ? (
-                      <Badge variant="default" className="text-xs">Environment</Badge>
-                    ) : (
-                      <Badge variant="secondary" className="text-xs">Manual</Badge>
-                    )}
-                    <code className="text-xs bg-muted px-2 py-1 rounded">
-                      {envInfo.currentApiKey ? '***' + envInfo.currentApiKey.slice(-4) : 'Not set'}
-                    </code>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           )}
@@ -197,14 +166,14 @@ export function EnvironmentConfig() {
                 GitHub Secrets Setup (Recommended)
               </CardTitle>
               <CardDescription>
-                Configure your backend URL and API key as GitHub repository secrets for automatic deployment.
+                Configure your backend URL as a GitHub repository secret for automatic deployment.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Alert>
                 <Info className="h-4 w-4" />
                 <AlertDescription>
-                  <strong>For GitHub Pages deployment:</strong> Set these as repository secrets to automatically configure your app without exposing credentials in your code.
+                  <strong>For GitHub Pages deployment:</strong> Set this as a repository secret to automatically configure your app without exposing the URL in your code.
                 </AlertDescription>
               </Alert>
 
@@ -215,22 +184,18 @@ export function EnvironmentConfig() {
                 </div>
                 
                 <div>
-                  <Label className="font-medium">2. Add repository secrets</Label>
+                  <Label className="font-medium">2. Add repository secret</Label>
                   <div className="ml-4 space-y-2 mt-1">
                     <div className="flex items-center gap-2">
                       <code className="bg-muted px-2 py-1 rounded text-xs">VITE_BACKEND_URL</code>
                       <span className="text-muted-foreground">→ Your backend API URL</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <code className="bg-muted px-2 py-1 rounded text-xs">VITE_API_KEY</code>
-                      <span className="text-muted-foreground">→ Your API authentication key</span>
                     </div>
                   </div>
                 </div>
 
                 <div>
                   <Label className="font-medium">3. Deploy to GitHub Pages</Label>
-                  <p className="text-muted-foreground">The secrets will be automatically injected during the build process.</p>
+                  <p className="text-muted-foreground">The secret will be automatically injected during the build process.</p>
                 </div>
               </div>
             </CardContent>
@@ -245,11 +210,11 @@ export function EnvironmentConfig() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {(!envInfo?.hasViteBackendUrl || !envInfo?.hasViteApiKey) && (
+              {!envInfo?.hasViteBackendUrl && (
                 <Alert>
                   <Warning className="h-4 w-4" />
                   <AlertDescription>
-                    Some environment variables are missing. Configure them here or set up GitHub secrets for production.
+                    Backend URL environment variable is missing. Configure it here or set up GitHub secrets for production.
                   </AlertDescription>
                 </Alert>
               )}
@@ -259,7 +224,7 @@ export function EnvironmentConfig() {
                   <Label htmlFor="backend-url">Backend URL</Label>
                   <Input
                     id="backend-url"
-                    placeholder="https://your-backend.com"
+                    placeholder="https://srv-d2tejgeuk2gs73cqecp0.onrender.com"
                     value={backendUrl}
                     onChange={(e) => setBackendUrl(e.target.value)}
                     disabled={envInfo?.hasViteBackendUrl}
@@ -271,26 +236,9 @@ export function EnvironmentConfig() {
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="api-key">API Key</Label>
-                  <Input
-                    id="api-key"
-                    type="password"
-                    placeholder="your-api-key"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    disabled={envInfo?.hasViteApiKey}
-                  />
-                  {envInfo?.hasViteApiKey && (
-                    <p className="text-xs text-muted-foreground">
-                      Using environment variable. Manual override disabled.
-                    </p>
-                  )}
-                </div>
-
                 <Button 
                   onClick={handleSaveConfig} 
-                  disabled={!backendUrl || (envInfo?.hasViteBackendUrl && envInfo?.hasViteApiKey)}
+                  disabled={!backendUrl || envInfo?.hasViteBackendUrl}
                   className="w-full"
                 >
                   Save Configuration
@@ -319,11 +267,6 @@ export function EnvironmentConfig() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Backend Connection</span>
                       {getStatusIcon(testResults.connection)}
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Authentication</span>
-                      {getStatusIcon(testResults.authentication)}
                     </div>
                     
                     <div className="flex items-center justify-between">

@@ -58,7 +58,6 @@ export function AppDebug({ selectedField, mapState, isVisible, onToggle }: AppDe
   const envInfo = {
     NODE_ENV: import.meta.env.NODE_ENV,
     VITE_BACKEND_URL: import.meta.env.VITE_BACKEND_URL,
-    VITE_API_KEY: import.meta.env.VITE_API_KEY ? '***REDACTED***' : undefined,
     userAgent: navigator.userAgent,
     timestamp: new Date().toISOString(),
   };

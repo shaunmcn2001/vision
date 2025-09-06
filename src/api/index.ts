@@ -2,16 +2,13 @@ import { Field, MonthlyNDVIResponse, BackendStatus } from '../types';
 
 class APIClient {
   private baseURL: string;
-  private apiKey: string;
 
   constructor() {
-    this.baseURL = import.meta.env.VITE_BACKEND_URL || 'https://vision-backend-0l94.onrender.com';
-    this.apiKey = import.meta.env.VITE_API_KEY || '';
+    this.baseURL = import.meta.env.VITE_BACKEND_URL || 'https://srv-d2tejgeuk2gs73cqecp0.onrender.com';
   }
 
-  updateSettings(baseURL: string, apiKey: string) {
+  updateSettings(baseURL: string) {
     this.baseURL = baseURL;
-    this.apiKey = apiKey;
   }
 
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
@@ -19,7 +16,6 @@ class APIClient {
     
     const headers = {
       'Content-Type': 'application/json',
-      ...(this.apiKey && { 'X-API-Key': this.apiKey }),
       ...options?.headers,
     };
 
@@ -70,9 +66,9 @@ class APIClient {
     const base = `${this.baseURL}/api/tiles/ndvi`;
     
     if (type === 'annual') {
-      return `${base}/annual/${fieldId}/${year}/{z}/{x}/{y}.png${this.apiKey ? `?api_key=${this.apiKey}` : ''}`;
+      return `${base}/annual/${fieldId}/${year}/{z}/{x}/{y}.png`;
     } else {
-      return `${base}/month/${fieldId}/${year}/${month}/{z}/{x}/{y}.png${this.apiKey ? `?api_key=${this.apiKey}` : ''}`;
+      return `${base}/month/${fieldId}/${year}/${month}/{z}/{x}/{y}.png`;
     }
   }
 }

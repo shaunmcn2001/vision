@@ -23,7 +23,6 @@ export class EnvSetupHelper {
     const suggestions: string[] = [];
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const apiKey = import.meta.env.VITE_API_KEY;
     const isProd = import.meta.env.PROD;
     const isDev = import.meta.env.DEV;
 
@@ -63,36 +62,12 @@ export class EnvSetupHelper {
       }
     }
 
-    // Check API Key
-    if (!apiKey) {
-      warnings.push('VITE_API_KEY is not defined - API calls may fail if authentication is required');
-      suggestions.push('Set VITE_API_KEY if your backend requires authentication');
-    } else {
-      // Check for placeholder values
-      const placeholders = ['your-api-key', 'api-key-here', 'replace-me', 'test-key', 'demo', 'placeholder'];
-      if (placeholders.some(placeholder => apiKey.toLowerCase().includes(placeholder))) {
-        warnings.push('API key appears to be a placeholder value');
-        suggestions.push('Replace the placeholder API key with your actual key');
-      }
-      
-      // Check minimum length
-      if (apiKey.length < 8) {
-        warnings.push('API key seems unusually short - verify it\'s correct');
-      }
-      
-      // Check for test values in production
-      if (isProd && ['test', 'demo', 'dev'].some(word => apiKey.toLowerCase().includes(word))) {
-        errors.push('Test/demo API key detected in production environment');
-        suggestions.push('Use your production API key for deployment');
-      }
-    }
-
     // Environment-specific guidance
-    if (isProd && (!backendUrl || !apiKey)) {
-      suggestions.push('For GitHub Pages: Add VITE_BACKEND_URL and VITE_API_KEY as repository secrets');
+    if (isProd && !backendUrl) {
+      suggestions.push('For GitHub Pages: Add VITE_BACKEND_URL as a repository secret');
     }
 
-    if (isDev && (!backendUrl || !apiKey)) {
+    if (isDev && !backendUrl) {
       suggestions.push('For local development: Create .env.local with your environment variables');
     }
 
@@ -125,10 +100,9 @@ export class EnvSetupHelper {
     if (isDev) {
       return [
         '1. Create .env.local file in your project root',
-        '2. Add: VITE_BACKEND_URL=https://your-backend-api.com',
-        '3. Add: VITE_API_KEY=your-api-key-here',
-        '4. Restart your development server',
-        '5. Check the Settings panel to verify configuration',
+        '2. Add: VITE_BACKEND_URL=https://srv-d2tejgeuk2gs73cqecp0.onrender.com',
+        '3. Restart your development server',
+        '4. Check the Settings panel to verify configuration',
       ];
     }
     
@@ -137,9 +111,8 @@ export class EnvSetupHelper {
         '1. Go to your GitHub repository Settings',
         '2. Navigate to "Secrets and variables" → "Actions"',
         '3. Add secret: VITE_BACKEND_URL with your API URL',
-        '4. Add secret: VITE_API_KEY with your API key',
-        '5. Push to main branch to trigger deployment',
-        '6. Check GitHub Actions logs for any build errors',
+        '4. Push to main branch to trigger deployment',
+        '5. Check GitHub Actions logs for any build errors',
       ];
     }
     
@@ -158,7 +131,7 @@ export class EnvSetupHelper {
       {
         title: 'GitHub Pages Deployment',
         tips: [
-          'Ensure repository secrets are named exactly: VITE_BACKEND_URL, VITE_API_KEY',
+          'Ensure repository secret is named exactly: VITE_BACKEND_URL',
           'Check GitHub Actions tab for build/deployment logs',
           'Verify GitHub Pages is enabled in repository settings',
           'Make sure your backend API allows CORS from your GitHub Pages domain',
@@ -177,17 +150,17 @@ export class EnvSetupHelper {
         title: 'API Connection Issues',
         tips: [
           'Verify backend URL is accessible from your deployment location',
-          'Check API key permissions and expiration',
           'Ensure CORS is properly configured on your backend',
-          'Test API endpoints directly using curl or Postman',
+          'Test API endpoints directly using curl or browser dev tools',
+          'Check that the backend service is running and healthy',
         ],
       },
       {
         title: 'Security Best Practices',
         tips: [
-          'Never commit API keys to your repository',
-          'Use API keys with minimal required permissions',
-          'Regularly rotate API keys',
+          'Never commit sensitive URLs to your repository',
+          'Use environment variables for configuration',
+          'Ensure your backend implements proper security measures',
           'Monitor API usage for unexpected patterns',
         ],
       },
@@ -207,15 +180,12 @@ export class EnvSetupHelper {
    */
   static getConfigSummary() {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const apiKey = import.meta.env.VITE_API_KEY;
     const mode = import.meta.env.MODE;
     const isDev = import.meta.env.DEV;
     const isProd = import.meta.env.PROD;
 
     return {
       backendUrl: backendUrl ? `${backendUrl.substring(0, 50)}${backendUrl.length > 50 ? '...' : ''}` : 'Not set',
-      hasApiKey: !!apiKey,
-      apiKeyPreview: apiKey ? `${apiKey.substring(0, 8)}...` : 'Not set',
       mode,
       isDev,
       isProd,
