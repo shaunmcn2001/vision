@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { 
   CheckCircle, 
   XCircle, 
-  AlertTriangle,
+  Warning,
   ExternalLink,
   GitBranch,
   Key,
@@ -58,7 +58,7 @@ export function GitHubSecretsStatus() {
       case 'success':
         return <CheckCircle className="h-4 w-4 text-green-500" weight="fill" />;
       case 'warning':
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" weight="fill" />;
+        return <Warning className="h-4 w-4 text-yellow-500" weight="fill" />;
       case 'error':
         return <XCircle className="h-4 w-4 text-red-500" weight="fill" />;
     }

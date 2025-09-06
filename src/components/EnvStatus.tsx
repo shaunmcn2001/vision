@@ -4,7 +4,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, XCircle, AlertTriangle, RefreshCw, ExternalLink } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, Warning, RefreshCw, ExternalLink } from '@phosphor-icons/react';
 import { useEnvConfig } from '../hooks/useEnvConfig';
 
 /**
@@ -150,7 +150,7 @@ export function EnvStatus() {
               <h4 className="text-sm font-medium text-yellow-600">Configuration Warnings</h4>
               {status.warnings.map((warning, index) => (
                 <Alert key={index} className="border-yellow-200">
-                  <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                  <Warning className="h-4 w-4 text-yellow-600" />
                   <AlertDescription>{warning}</AlertDescription>
                 </Alert>
               ))}

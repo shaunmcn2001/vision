@@ -8,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { 
   CheckCircle, 
   XCircle, 
-  AlertTriangle, 
+  Warning, 
   RefreshCw, 
   ExternalLink, 
   ChevronDown,
@@ -47,7 +47,7 @@ export function EnhancedEnvStatus() {
       case 'success':
         return <CheckCircle className="h-4 w-4 text-green-500" weight="fill" />;
       case 'warning':
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" weight="fill" />;
+        return <Warning className="h-4 w-4 text-yellow-500" weight="fill" />;
       case 'error':
         return <XCircle className="h-4 w-4 text-red-500" weight="fill" />;
     }
@@ -205,7 +205,7 @@ export function EnhancedEnvStatus() {
               <h4 className="text-sm font-medium text-yellow-600">Warnings</h4>
               {validation.warnings.map((warning, index) => (
                 <Alert key={index} className="border-yellow-200">
-                  <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                  <Warning className="h-4 w-4 text-yellow-600" />
                   <AlertDescription>{warning}</AlertDescription>
                 </Alert>
               ))}
