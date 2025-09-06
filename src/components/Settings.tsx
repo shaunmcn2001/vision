@@ -19,7 +19,7 @@ import { Separator } from '@/components/ui/separator';
 import { Gear, Check, X, Eye, EyeSlash, Info, GitBranch, ChevronDown } from '@phosphor-icons/react';
 import { apiClient } from '../api';
 import { useKV } from '@github/spark/hooks';
-import { EnvStatus } from './EnvStatus';
+import { EnhancedEnvStatus } from './EnhancedEnvStatus';
 
 interface SettingsProps {
   onSettingsUpdate?: () => void;
@@ -149,7 +149,7 @@ export function Settings({ onSettingsUpdate }: SettingsProps) {
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-4">
-              <EnvStatus />
+              <EnhancedEnvStatus />
             </CollapsibleContent>
           </Collapsible>
 

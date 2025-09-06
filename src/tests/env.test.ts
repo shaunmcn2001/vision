@@ -5,6 +5,8 @@
  * for both local development and GitHub Pages deployment scenarios.
  */
 
+import { describe, test, expect, beforeEach } from 'vitest';
+
 // Mock import.meta.env for testing
 const mockEnv = {
   VITE_BACKEND_URL: 'https://api.example.com',
