@@ -12,6 +12,7 @@ import {
 import { Bug, CaretDown, CaretRight, Copy, Trash } from '@phosphor-icons/react';
 import { Field, MapState } from '../types';
 import { useKV } from '@github/spark/hooks';
+import { ConnectionTest } from './ConnectionTest';
 
 interface AppDebugProps {
   selectedField: Field | null;
@@ -22,7 +23,8 @@ interface AppDebugProps {
 
 export function AppDebug({ selectedField, mapState, isVisible, onToggle }: AppDebugProps) {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    environment: true,
+    connectionTest: true,
+    environment: false,
     mapState: false,
     selectedField: false,
     storage: false,
@@ -94,6 +96,26 @@ export function AppDebug({ selectedField, mapState, isVisible, onToggle }: AppDe
 
       <CardContent className="space-y-3 pt-0">
         <ScrollArea className="h-64">
+          {/* Connection Test */}
+          <Collapsible 
+            open={expandedSections.connectionTest} 
+            onOpenChange={() => toggleSection('connectionTest')}
+          >
+            <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium w-full hover:bg-muted rounded p-2">
+              {expandedSections.connectionTest ? (
+                <CaretDown className="h-3 w-3" />
+              ) : (
+                <CaretRight className="h-3 w-3" />
+              )}
+              Backend Connection Test
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pl-2 pt-2">
+              <ConnectionTest />
+            </CollapsibleContent>
+          </Collapsible>
+
+          <Separator />
+
           {/* Environment Variables */}
           <Collapsible 
             open={expandedSections.environment} 
