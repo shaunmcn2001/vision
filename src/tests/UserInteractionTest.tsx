@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useKV } from '../hooks/useKV';
-import { CheckCircle, XCircle, Play, RotateCcw, User } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, Play, ArrowCounterClockwise, User } from '@phosphor-icons/react';
 
 interface UserInteractionStep {
   id: string;
@@ -62,7 +62,7 @@ export function UserInteractionTest() {
         await new Promise(resolve => setTimeout(resolve, 100));
         
         const stored = localStorage.getItem('spark-kv:selected-field-id');
-        return stored && JSON.parse(stored) === testFieldId;
+        return !!(stored && JSON.parse(stored) === testFieldId);
       }
     },
     {
@@ -76,7 +76,7 @@ export function UserInteractionTest() {
         await new Promise(resolve => setTimeout(resolve, 100));
         
         const stored = localStorage.getItem('spark-kv:selected-year');
-        return stored && JSON.parse(stored) === testYear;
+        return !!(stored && JSON.parse(stored) === testYear);
       }
     },
     {
@@ -90,7 +90,7 @@ export function UserInteractionTest() {
         await new Promise(resolve => setTimeout(resolve, 100));
         
         const stored = localStorage.getItem('spark-kv:selected-month');
-        return stored && JSON.parse(stored) === testMonth;
+        return !!(stored && JSON.parse(stored) === testMonth);
       }
     },
     {
@@ -107,9 +107,9 @@ export function UserInteractionTest() {
         const yearStored = localStorage.getItem('spark-kv:selected-year');
         const monthStored = localStorage.getItem('spark-kv:selected-month');
         
-        const fieldCorrect = fieldStored && JSON.parse(fieldStored) === newFieldId;
-        const yearUnchanged = yearStored && JSON.parse(yearStored) === 2022;
-        const monthUnchanged = monthStored && JSON.parse(monthStored) === 7;
+        const fieldCorrect = !!(fieldStored && JSON.parse(fieldStored) === newFieldId);
+        const yearUnchanged = !!(yearStored && JSON.parse(yearStored) === 2022);
+        const monthUnchanged = !!(monthStored && JSON.parse(monthStored) === 7);
         
         return fieldCorrect && yearUnchanged && monthUnchanged;
       }
@@ -127,9 +127,9 @@ export function UserInteractionTest() {
         const yearStored = localStorage.getItem('spark-kv:selected-year');
         const monthStored = localStorage.getItem('spark-kv:selected-month');
         
-        const fieldPreserved = fieldStored && JSON.parse(fieldStored) === 'field-farm-002';
-        const yearPreserved = yearStored && JSON.parse(yearStored) === 2022;
-        const monthCleared = monthStored && JSON.parse(monthStored) === null;
+        const fieldPreserved = !!(fieldStored && JSON.parse(fieldStored) === 'field-farm-002');
+        const yearPreserved = !!(yearStored && JSON.parse(yearStored) === 2022);
+        const monthCleared = !!(monthStored && JSON.parse(monthStored) === null);
         
         return fieldPreserved && yearPreserved && monthCleared;
       }
@@ -149,7 +149,7 @@ export function UserInteractionTest() {
         await new Promise(resolve => setTimeout(resolve, 100)); // Final wait
         
         const stored = localStorage.getItem('spark-kv:selected-year');
-        return stored && JSON.parse(stored) === 2024;
+        return !!(stored && JSON.parse(stored) === 2024);
       }
     },
     {
@@ -163,7 +163,7 @@ export function UserInteractionTest() {
         await new Promise(resolve => setTimeout(resolve, 100));
         
         const stored = localStorage.getItem('spark-kv:selected-year');
-        return stored && JSON.parse(stored) === 2025;
+        return !!(stored && JSON.parse(stored) === 2025);
       }
     },
     {
@@ -206,9 +206,9 @@ export function UserInteractionTest() {
         const yearStored = localStorage.getItem('spark-kv:selected-year');
         const monthStored = localStorage.getItem('spark-kv:selected-month');
         
-        const fieldCleared = fieldStored && JSON.parse(fieldStored) === null;
-        const yearReset = yearStored && JSON.parse(yearStored) === new Date().getFullYear();
-        const monthCleared = monthStored && JSON.parse(monthStored) === null;
+        const fieldCleared = !!(fieldStored && JSON.parse(fieldStored) === null);
+        const yearReset = !!(yearStored && JSON.parse(yearStored) === new Date().getFullYear());
+        const monthCleared = !!(monthStored && JSON.parse(monthStored) === null);
         
         return fieldCleared && yearReset && monthCleared;
       }
@@ -306,7 +306,7 @@ export function UserInteractionTest() {
           </Button>
           
           <Button variant="outline" onClick={resetTest} disabled={isRunning}>
-            <RotateCcw className="h-4 w-4 mr-2" />
+            <ArrowCounterClockwise className="h-4 w-4 mr-2" />
             Reset
           </Button>
 

@@ -165,6 +165,7 @@ export class EnvValidator {
   static getConfig() {
     return {
       backendUrl: import.meta.env.VITE_BACKEND_URL,
+      apiKey: import.meta.env.VITE_API_KEY,
       isDev: import.meta.env.DEV,
       isProd: import.meta.env.PROD,
       mode: import.meta.env.MODE,

@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useKV } from '../hooks/useKV';
-import { CheckCircle, XCircle, ArrowClockwise, Zap } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, ArrowClockwise, Lightning } from '@phosphor-icons/react';
 
 interface IntegrationTestResult {
   name: string;
@@ -238,7 +238,7 @@ export function IntegrationTest() {
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Zap className="h-5 w-5" />
+          <Lightning className="h-5 w-5" />
           Integration Test Suite
         </CardTitle>
         <CardDescription>

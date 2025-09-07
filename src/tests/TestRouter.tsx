@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { StatePersistenceTest } from './StatePersistenceTest';
 import { IntegrationTest } from './IntegrationTest';
 import { UserInteractionTest } from './UserInteractionTest';
-import { TestTube, ArrowLeft, Home, Zap, User } from '@phosphor-icons/react';
+import { TestTube, ArrowLeft, House, Lightning, User } from '@phosphor-icons/react';
 
 interface TestRouterProps {
   onBackToApp: () => void;
@@ -87,7 +87,7 @@ export function TestRouter({ onBackToApp }: TestRouterProps) {
             onClick={onBackToApp}
             className="flex items-center gap-2"
           >
-            <Home className="h-4 w-4" />
+            <House className="h-4 w-4" />
             Back to App
           </Button>
         </div>
@@ -121,7 +121,7 @@ export function TestRouter({ onBackToApp }: TestRouterProps) {
           >
             <div className="flex items-start gap-4">
               <div className="p-2 bg-green-100 rounded-lg">
-                <Zap className="h-6 w-6 text-green-600" />
+                <Lightning className="h-6 w-6 text-green-600" />
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold mb-2">Integration Test</h3>

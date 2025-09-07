@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { CheckCircle, XCircle, ArrowClockwise } from '@phosphor-icons/react';
 import { apiClient } from '../api';
-import { BackendStatus } from '../types';
+import type { BackendStatus } from '../types';
 
 export function BackendStatus() {
   const [status, setStatus] = useState<BackendStatus>({
