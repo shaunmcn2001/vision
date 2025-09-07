@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { MapPin, MagnifyingGlass } from '@phosphor-icons/react';
 import { apiClient } from '../api';
 import { Field } from '../types';
-import { useKV } from '@github/spark/hooks';
+import { useKV } from '../hooks';
 
 interface FieldListProps {
   selectedFieldId: string | null;

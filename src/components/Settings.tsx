@@ -18,7 +18,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Gear, Check, X, Info, GitBranch } from '@phosphor-icons/react';
 import { apiClient } from '../api';
-import { useKV } from '@github/spark/hooks';
+import { useKV } from '../hooks';
 import { EnhancedEnvStatus } from './EnhancedEnvStatus';
 import { EnvironmentConfig } from './EnvironmentConfig';
 

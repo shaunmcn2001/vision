@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { EnvironmentConfig } from '../components/EnvironmentConfig';
 
 // Mock the hooks and API client
-vi.mock('@github/spark/hooks', () => ({
+vi.mock('../hooks', () => ({
   useKV: vi.fn(() => ['', vi.fn(), vi.fn()])
 }));
 
@@ -99,7 +99,7 @@ describe('EnvironmentConfig', () => {
   });
 
   it('allows manual configuration when environment variables not set', async () => {
-    const { useKV } = await import('@github/spark/hooks');
+    const { useKV } = await import('../hooks');
     const mockSetBackendUrl = vi.fn();
     
     (useKV as any)
