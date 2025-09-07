@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useKV } from '../hooks/useKV';
-import { CheckCircle, XCircle, RefreshCw, Settings, Clock, User } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, RefreshCw, Gear, Clock, User } from '@phosphor-icons/react';
 
 interface TestResult {
   name: string;
@@ -301,7 +301,7 @@ export function StatePersistenceTest() {
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Settings className="h-5 w-5" />
+          <Gear className="h-5 w-5" />
           State Persistence Test Suite
         </CardTitle>
         <CardDescription>
