@@ -7,8 +7,14 @@
  * for different deployment scenarios.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import process from 'process';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // ANSI color codes
 const colors = {
@@ -30,19 +36,24 @@ function validateEnvironment() {
   let hasErrors = false;
   let warnings = 0;
   
+  // Get the project root directory (go up from scripts/ to project root)
+  const projectRoot = path.resolve(__dirname, '..');
+  
   // Check if running in different contexts
   const context = {
     isCI: process.env.CI === 'true',
     isGitHubActions: process.env.GITHUB_ACTIONS === 'true',
     nodeEnv: process.env.NODE_ENV,
-    mode: process.env.MODE
+    mode: process.env.MODE,
+    projectRoot
   };
   
   log(`📋 Context Information:`, 'blue');
   log(`   CI Environment: ${context.isCI ? 'Yes' : 'No'}`);
   log(`   GitHub Actions: ${context.isGitHubActions ? 'Yes' : 'No'}`);
   log(`   NODE_ENV: ${context.nodeEnv || 'undefined'}`);
-  log(`   MODE: ${context.mode || 'undefined'}\n`);
+  log(`   MODE: ${context.mode || 'undefined'}`);
+  log(`   Project Root: ${context.projectRoot}\n`);
   
   // Check for required environment variables
   const requiredEnvVars = ['VITE_BACKEND_URL'];
@@ -84,7 +95,7 @@ function validateEnvironment() {
   });
   
   // Check for .env file in development
-  const envFilePath = path.join(process.cwd(), '.env');
+  const envFilePath = path.join(context.projectRoot, '.env');
   const hasEnvFile = fs.existsSync(envFilePath);
   
   log('\n📄 Local Configuration Files:', 'blue');
@@ -121,7 +132,7 @@ function validateEnvironment() {
   }
   
   // Check GitHub Actions workflow file
-  const workflowPath = path.join(process.cwd(), '.github', 'workflows', 'deploy.yml');
+  const workflowPath = path.join(context.projectRoot, '.github', 'workflows', 'deploy.yml');
   const hasWorkflow = fs.existsSync(workflowPath);
   
   log('\n🚀 Deployment Configuration:', 'blue');
@@ -161,7 +172,7 @@ function validateEnvironment() {
   }
   
   // Check test files
-  const testFilePath = path.join(process.cwd(), 'src', 'tests', 'EnvironmentConfig.test.tsx');
+  const testFilePath = path.join(context.projectRoot, 'src', 'tests', 'EnvironmentConfig.test.tsx');
   const hasTests = fs.existsSync(testFilePath);
   
   log('\n🧪 Testing Configuration:', 'blue');

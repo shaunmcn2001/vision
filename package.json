@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "vite",
         "kill": "fuser -k 5000/tcp",
-        "build": "tsc -b --noCheck && vite build",
+        "build": "tsc --noEmit && vite build",
         "lint": "eslint .",
         "optimize": "vite optimize",
         "preview": "vite preview",
@@ -16,7 +16,7 @@
         "test:deployment": "vitest src/tests/deployment.test.ts",
         "test:ui": "vitest --ui",
         "test:coverage": "vitest --coverage",
-        "validate-env": "node scripts/validate-env.js",
+        "validate-env": "node scripts/validate-env-simple.js",
         "predeploy": "npm run validate-env && npm run test:deployment"
     },
     "dependencies": {
