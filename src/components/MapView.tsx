@@ -15,7 +15,7 @@ import {
 } from '@phosphor-icons/react';
 import { Field, MapState } from '../types';
 import { apiClient } from '../api';
-import { useKV } from '../hooks';
+import { useKV } from '@github/spark/hooks';
 
 interface MapViewProps {
   selectedField: Field | null;
