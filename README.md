@@ -2,60 +2,32 @@
 
 A modern web application for viewing and analyzing NDVI (Normalized Difference Vegetation Index) data with interactive maps, field management, and temporal analysis.
 
-## 🚀 GitHub Pages Deployment
+## 🚀 GitHub Pages Deployment Status
 
-This application is configured for automatic deployment to GitHub Pages with environment variable support through GitHub secrets.
+This application is configured for automatic deployment to GitHub Pages. The deployment:
+- ✅ **Backend URL**: Automatically configured to `https://vision-backend-0l94.onrender.com`  
+- ✅ **API Authentication**: No API key required (backend updated)
+- ✅ **Build Configuration**: Optimized for GitHub Pages with proper base paths
+- ✅ **Environment Testing**: Automated validation of backend connectivity
 
-### Deployment Setup
-
-1. **Fork this repository** to your GitHub account
-2. **Enable GitHub Pages**: 
-   - Go to Settings → Pages → Source: "GitHub Actions"
-3. **Configure Environment Variables** (optional):
-   - Go to Settings → Secrets and variables → Actions
-   - Add these repository secrets:
-     - `VITE_BACKEND_URL`: Your backend API URL (defaults to `https://vision-backend-0l94.onrender.com`)
-     - `VITE_API_KEY`: API key if required (not needed for the default backend)
-4. **Deploy**: Push to main branch and deployment will happen automatically!
-
-### Current Configuration
-- ✅ **Backend URL**: `https://vision-backend-0l94.onrender.com`  
-- ✅ **API Authentication**: No API key required
-- ✅ **Build Configuration**: Optimized for GitHub Pages
-- ✅ **Environment Testing**: Automated validation in CI/CD
+**To deploy your own copy:**
+1. Fork this repository
+2. Enable GitHub Pages in repository Settings → Pages → Source: "GitHub Actions"
+3. (Optional) Add `VITE_BACKEND_URL` as a repository secret if using a different backend
+4. Push to main branch - deployment will happen automatically!
 
 ## 🎯 Quick Start
 
-### Local Development
+### Environment Variables
 
-1. **Clone the repository**:
-   ```bash
-   git clone <your-repo-url>
-   cd vision
-   npm install
-   ```
+This application uses environment variables for configuration. You can set them in three ways:
 
-2. **Set up environment variables** (optional):
-   Create `.env.local`:
+1. **For local development** - Create `.env.local`:
    ```bash
    VITE_BACKEND_URL=https://vision-backend-0l94.onrender.com
-   # VITE_API_KEY=your-api-key  # Optional
    ```
 
-3. **Run the development server**:
-   ```bash
-   npm run dev
-   ```
-
-4. **Run tests**:
-   ```bash
-   npm test
-   npm run test:deployment  # Test deployment configuration
-   ```
-
-### Production Deployment
-
-The application automatically validates the environment configuration before deployment:
+2. **For GitHub Pages deployment** - Set repository secrets (optional):
    - Go to your repository Settings → Secrets and variables → Actions
    - Add `VITE_BACKEND_URL` as a secret (defaults to production backend if not set)
 
