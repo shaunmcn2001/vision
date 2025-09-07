@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/collapsible';
 import { Bug, CaretDown, CaretRight, Copy, Trash } from '@phosphor-icons/react';
 import { Field, MapState } from '../types';
-import { useKV } from '@github/spark/hooks';
+import { useKV } from '../hooks/useKV';
 import { ConnectionTest } from './ConnectionTest';
 
 interface AppDebugProps {

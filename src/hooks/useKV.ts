@@ -22,15 +22,17 @@ export function useKV<T>(key: string, defaultValue: T): [T, (value: T | ((curren
   // Update localStorage whenever the value changes
   const setValue = useCallback((value: T | ((current: T) => T)) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(`spark-kv:${key}`, JSON.stringify(valueToStore));
-      }
+      setStoredValue(current => {
+        const valueToStore = value instanceof Function ? value(current) : value;
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(`spark-kv:${key}`, JSON.stringify(valueToStore));
+        }
+        return valueToStore;
+      });
     } catch (error) {
       console.warn(`Error setting localStorage key "${key}":`, error);
     }
-  }, [key, storedValue]);
+  }, [key]);
 
   // Delete the key from storage
   const deleteValue = useCallback(() => {

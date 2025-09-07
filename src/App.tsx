@@ -8,14 +8,14 @@ import { Settings } from './components/Settings';
 import { BackendStatus } from './components/BackendStatus';
 import { AppDebug } from './components/AppDebug';
 import { Field, MapState } from './types';
-import { useKV } from '@github/spark/hooks';
+import { useKV } from './hooks/useKV';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Plant, Bug } from '@phosphor-icons/react';
 
 function App() {
-  // Persistent state
+  // Persistent state using useKV hook
   const [selectedFieldId, setSelectedFieldId] = useKV('selected-field-id', null as string | null);
   const [selectedYear, setSelectedYear] = useKV('selected-year', new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useKV('selected-month', null as number | null);
