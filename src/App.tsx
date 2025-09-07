@@ -7,12 +7,13 @@ import { ChartPanel } from './components/ChartPanel';
 import { Settings } from './components/Settings';
 import { BackendStatus } from './components/BackendStatus';
 import { AppDebug } from './components/AppDebug';
+import { TestRouter } from './tests/TestRouter';
 import { Field, MapState } from './types';
 import { useKV } from './hooks/useKV';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Plant, Bug } from '@phosphor-icons/react';
+import { Plant, Bug, TestTube } from '@phosphor-icons/react';
 
 function App() {
   // Persistent state using useKV hook
@@ -33,6 +34,7 @@ function App() {
   });
   const [showDebug, setShowDebug] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showTests, setShowTests] = useState(false);
 
   // Handle field selection
   const handleFieldSelect = (field: Field) => {
@@ -56,12 +58,22 @@ function App() {
     setShowDebug(prev => !prev);
   };
 
+  // Toggle test mode
+  const toggleTests = () => {
+    setShowTests(prev => !prev);
+  };
+
   // Initialize selected field from ID
   useEffect(() => {
     if (selectedFieldId && !selectedField) {
       // Field will be set when FieldList loads and finds the matching field
     }
   }, [selectedFieldId, selectedField]);
+
+  // Show test router if in test mode
+  if (showTests) {
+    return <TestRouter onBackToApp={() => setShowTests(false)} />;
+  }
 
   return (
     <div className="h-screen w-screen flex bg-background text-foreground overflow-hidden">
@@ -132,6 +144,14 @@ function App() {
                     className="h-6 w-6 p-0"
                   >
                     <Bug className="h-3 w-3" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleTests}
+                    className="h-6 w-6 p-0"
+                  >
+                    <TestTube className="h-3 w-3" />
                   </Button>
                 </div>
                 <span>© 2024 NDVI Vision</span>
