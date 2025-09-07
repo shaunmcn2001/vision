@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useKV } from '../hooks/useKV';
-import { CheckCircle, XCircle, RefreshCw, Gear, Clock, User } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, ArrowClockwise, Gear, Clock, User } from '@phosphor-icons/react';
 
 interface TestResult {
   name: string;
@@ -312,7 +312,7 @@ export function StatePersistenceTest() {
         {/* Test Controls */}
         <div className="flex items-center gap-4">
           <Button onClick={runTests} disabled={isRunning} className="flex items-center gap-2">
-            <RefreshCw className={`h-4 w-4 ${isRunning ? 'animate-spin' : ''}`} />
+            <ArrowClockwise className={`h-4 w-4 ${isRunning ? 'animate-spin' : ''}`} />
             {isRunning ? 'Running Tests...' : 'Run All Tests'}
           </Button>
           <Button variant="outline" onClick={clearStorage}>

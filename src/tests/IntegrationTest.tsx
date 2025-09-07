@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useKV } from '../hooks/useKV';
-import { CheckCircle, XCircle, RefreshCw, Zap } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, ArrowClockwise, Zap } from '@phosphor-icons/react';
 
 interface IntegrationTestResult {
   name: string;
@@ -249,7 +249,7 @@ export function IntegrationTest() {
         {/* Test Controls */}
         <div className="flex items-center gap-4">
           <Button onClick={runIntegrationTests} disabled={isRunning} className="flex items-center gap-2">
-            <RefreshCw className={`h-4 w-4 ${isRunning ? 'animate-spin' : ''}`} />
+            <ArrowClockwise className={`h-4 w-4 ${isRunning ? 'animate-spin' : ''}`} />
             {isRunning ? 'Running Integration Tests...' : 'Run Integration Tests'}
           </Button>
           <Button variant="outline" onClick={resetAppState}>
