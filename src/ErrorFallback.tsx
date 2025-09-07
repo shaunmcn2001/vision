@@ -1,7 +1,7 @@
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
-import { AlertTriangle, RefreshCw } from "@phosphor-icons/react";
+import { Warning, ArrowClockwise } from "@phosphor-icons/react";
 
 interface ErrorFallbackProps {
   error: Error;
@@ -17,7 +17,7 @@ export const ErrorFallback = ({ error, resetErrorBoundary }: ErrorFallbackProps)
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <Alert variant="destructive" className="mb-6">
-          <AlertTriangle className="h-4 w-4" />
+          <Warning className="h-4 w-4" />
           <AlertTitle>This spark has encountered a runtime error</AlertTitle>
           <AlertDescription>
             Something unexpected happened while running the application. The error details are shown below. Contact the spark author and let them know about this issue.
@@ -36,7 +36,7 @@ export const ErrorFallback = ({ error, resetErrorBoundary }: ErrorFallbackProps)
           className="w-full"
           variant="outline"
         >
-          <RefreshCw className="h-4 w-4 mr-2" />
+          <ArrowClockwise className="h-4 w-4 mr-2" />
           Try Again
         </Button>
       </div>

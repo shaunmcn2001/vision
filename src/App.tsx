@@ -8,8 +8,8 @@ import { Plant } from '@phosphor-icons/react';
 
 function App() {
   // Test persistent state
-  const [counter, setCounter] = useKV('test-counter', 0);
-  const [selectedYear, setSelectedYear] = useKV('selected-year', new Date().getFullYear());
+  const [counter, setCounter] = useKV('test-counter', '0');
+  const [selectedYear, setSelectedYear] = useKV('selected-year', new Date().getFullYear().toString());
   
   // Local state
   const [showDebug, setShowDebug] = useState(false);
@@ -40,13 +40,13 @@ function App() {
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
               <Button 
-                onClick={() => setCounter(c => c + 1)}
+                onClick={() => setCounter(c => c ? (parseInt(c) + 1).toString() : '1')}
                 variant="default"
               >
                 Count: {counter}
               </Button>
               <Button 
-                onClick={() => setCounter(0)}
+                onClick={() => setCounter('0')}
                 variant="outline"
               >
                 Reset
@@ -57,7 +57,7 @@ function App() {
               <label className="text-sm font-medium">Year:</label>
               <select 
                 value={selectedYear} 
-                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                onChange={(e) => setSelectedYear(e.target.value)}
                 className="px-3 py-1 rounded border border-input bg-background"
               >
                 {[2020, 2021, 2022, 2023, 2024].map(year => (
